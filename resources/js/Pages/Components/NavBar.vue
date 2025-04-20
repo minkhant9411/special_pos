@@ -1,7 +1,7 @@
 <template>
     <nav class="p-5 bg-gray-100 flex justify-between items-center dark:bg-gray-800">
         <div class="flex items-center gap-4">
-            <img class="w-10 h-10 rounded-full" src="/public/storage/profiles/default.jpeg" alt="" />
+            <img class="w-10 h-10 rounded-full" src="/public/storage/profiles/default.jpg" alt="" />
             <div class="font-medium dark:text-white text-gray-700">
                 <div>{{ $page.props.auth.user.name }}</div>
                 <!-- <div class="text-sm text-gray-700 dark:text-gray-400">

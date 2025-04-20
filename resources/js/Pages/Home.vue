@@ -57,6 +57,7 @@ const cardsData = [
     { href: "supplier.index", name: "Suppliers" },
     { href: "product.index", name: "Products" },
     { href: "purchase.index", name: "Purchase" },
+    { href: "sale.index", name: "Sale" },
 ];
 </script>
 <style scoped></style>

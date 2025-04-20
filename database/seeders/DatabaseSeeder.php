@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\User;
@@ -24,7 +25,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Supplier::create([
-            'name' => 'supplier1'
+            'name' => 'supplier1',
+            'description' => 'yangon 19th street, 09797797797'
+        ]);
+        Customer::create([
+            'name' => 'customer1',
+            'description' => 'yangon 19th street, 09797797797'
         ]);
         Category::create([
             'name' => 'Drinks',

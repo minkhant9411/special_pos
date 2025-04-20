@@ -1,29 +1,17 @@
 <template>
     <form class="mt-20 px-3" @submit.prevent="submit">
         <div class="my-7 text-center">
-            <img
-                v-if="!temp_image"
-                src="/storage/app/public/profiles/default.jpeg"
-                alt=""
-                class="h-40 w-40 object-cover mx-auto rounded-xl"
-            />
-            <img
-                v-else
-                :src="temp_image"
-                alt=""
-                class="h-40 w-40 object-cover mx-auto rounded-xl"
-            />
+            <img v-if="!temp_image" src="/storage/app/public/profiles/default.jpg" alt=""
+                class="h-40 w-40 object-cover mx-auto rounded-xl" />
+            <img v-else :src="temp_image" alt="" class="h-40 w-40 object-cover mx-auto rounded-xl" />
         </div>
         <div class="my-7">
-            <input
-                @change="changeInput"
-                accept="image/*"
+            <input @change="changeInput" accept="image/*"
                 class="w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                type="file"
-            />
+                type="file" />
             <small class="text-red-500" v-if="$page.props.errors.image">{{
                 $page.props.errors.image
-            }}</small>
+                }}</small>
         </div>
 
         <div class="grid grid-cols-2 gap-2 my-7">
@@ -31,61 +19,45 @@
             <Input v-model="form.unit" type="text" placeholder="Product Unit" />
             <small class="text-red-500" v-if="$page.props.errors.name">{{
                 $page.props.errors.name
-            }}</small>
+                }}</small>
             <small class="text-red-500" v-if="$page.props.errors.unit">{{
                 $page.props.errors.unit
-            }}</small>
+                }}</small>
         </div>
 
         <div class="my-7">
-            <select
-                v-model="form.category_id"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
+            <select v-model="form.category_id"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option selected :value="null">Product Category</option>
 
-                <option
-                    v-for="category in categories"
-                    :key="category.id"
-                    :value="category.id"
-                >
+                <option v-for="category in categories" :key="category.id" :value="category.id">
                     {{ category.name }}
                 </option>
             </select>
             <small class="text-red-500" v-if="$page.props.errors.category_id">{{
                 $page.props.errors.category_id
-            }}</small>
+                }}</small>
         </div>
 
         <div class="grid grid-cols-2 gap-2 my-7">
-            <Input
-                v-model="form.price"
-                type="number"
-                placeholder="Product Price"
-            />
-            <Input
-                v-model="form.cost_price"
-                type="number"
-                placeholder="Product Cost Price"
-            />
+            <Input v-model="form.price" type="number" placeholder="Product Price" />
+            <Input v-model="form.cost_price" type="number" placeholder="Product Cost Price" />
             <small class="text-red-500" v-if="$page.props.errors.price">{{
                 $page.props.errors.price
-            }}</small>
+                }}</small>
             <small class="text-red-500" v-if="$page.props.errors.cost_price">{{
                 $page.props.errors.cost_price
-            }}</small>
+                }}</small>
         </div>
         <div class="my-7">
             <TextAreaTag v-model="form.description" />
             <small class="text-red-500" v-if="$page.props.errors.description">{{
                 $page.props.errors.description
-            }}</small>
+                }}</small>
         </div>
         <div class="my-7">
-            <button
-                type="submit"
-                class="bg-yellow-500 focus:ring-yellow-800 focus:ring-2 dark:bg-blue-700 dark:focus:ring-blue-500 rounded-xl p-3 w-full"
-            >
+            <button type="submit"
+                class="bg-yellow-500 focus:ring-yellow-800 focus:ring-2 dark:bg-blue-700 dark:focus:ring-blue-500 rounded-xl p-3 w-full">
                 Submit
             </button>
         </div>
