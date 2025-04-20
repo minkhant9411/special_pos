@@ -38,12 +38,14 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
+            'transaction_type' => 'required|in:for_sale,for_purchase,for_both',
         ]);
 
         // Category::create($request->all());
         Category::create([
             'name' => $request->name,
             'description' => $request->description,
+            'transaction_type' => $request->transaction_type,
             'created_by' => auth()->user()->id,
         ]);
         return redirect()->route('category.index')->with('message', 'Category created successfully.');

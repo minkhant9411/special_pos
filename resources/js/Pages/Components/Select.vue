@@ -15,7 +15,7 @@ const model = defineModel({
 })
 const props = defineProps({
     data: { type: Object, default: [] },
-    name: { type: String, default: 'All' }
+    name: { type: String, default: 'All' },
 })
 </script>
 <style scoped></style>

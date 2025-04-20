@@ -10,6 +10,7 @@ class Category extends Model
     protected $fillable = [
         'name',
         'description',
+        'transaction_type',
         'created_by',
         'is_deleted',
         'updated_by',
