@@ -1,9 +1,11 @@
 <template>
     <NormalNav name="Cart" url="purchase.index" />
     <div class="m-2 mt-20">
+
         <div class="grid grid-cols-2 gap-2">
-            <DatePicker v-model="date" @date="(d) => date = d" />
-            <Select v-model="supplier" :data="suppliers" name="Supplier" />
+            <DatePicker v-model="form.date" @date="(d) => form.date = d" />
+
+            <Select v-model="form.supplier_id" :data="suppliers" name="Supplier" />
             <small class="text-red-500" v-if="page.props.errors.date">{{ page.props.errors.date }}</small>
             <!-- <small class="text-red-500" v-if="page.props.errors.supplier"></small> -->
         </div>
@@ -18,7 +20,7 @@
                     <span class="block">{{ item.name }}</span>
                     <span
                         class="flex justify-between items-center py-1 px-2 rounded-4xl bg-gray-200 dark:bg-gray-700 text-sm  text-center mt-3 w-18">
-                        <svg @click="() => { --item.qty; changeQty() }"
+                        <svg @click="() => { --item.qty; cartChange() }"
                             class="w-5 h-5 text-gray-800 dark:text-white cursor-pointer rounded-full p-1 active:bg-gray-400 dark:active:bg-gray-900"
                             aria-hidden="
                             true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
@@ -27,7 +29,7 @@
                                 d="M5 12h14" />
                         </svg>
                         {{ item.qty }}
-                        <svg @click="() => { ++item.qty; changeQty() }"
+                        <svg @click="() => { ++item.qty; cartChange() }"
                             class="w-5 h-5 text-gray-800 dark:text-white cursor-pointer rounded-full p-1 active:bg-gray-400 dark:active:bg-gray-900"
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                             viewBox="0 0 24 24">
@@ -36,7 +38,13 @@
                         </svg>
                     </span>
                 </div>
-                <span class="py-2 mx-auto self-center text-sm">MMK {{ item.price * item.qty }} </span>
+                <div class="py-2 mx-auto self-center text-sm">MMK
+                    <span class="px-2 py-1" contenteditable
+                        @blur="(e) => { item.price = e.target.innerText; cartChange() }">
+                        {{ item.price }}
+                    </span>
+                    X {{ item.qty }}
+                </div>
                 <!-- <spn class="py-2 self-center">
                     <svg @click="deleteItem(item.id)" class="w-5 h-5 mx-auto text-red-400" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -50,19 +58,35 @@
             </div>
         </div>
         <div class="fixed py-3 bottom-0 left-0 w-full bg-white dark:bg-gray-800 rounded-t-xl px-3">
-            <div class="py-3">
-                <h1 class=" font-bold text-2xl">Total: {{ total }}</h1>
-                <div class="mt-4">
-                    <Input type="number" v-model="paid" placeholder="Paid Amount" />
-                    <small class=" text-red-500 " v-if="page.props.errors.paid">{{ page.props.errors.paid }}</small>
+            <div class="flex justify-center" @click="showTotal = !showTotal">
+                <svg class="w-6 h-6 cursor-pointer text-gray-800 dark:text-white hover:text-gray-500 focus:text-gray-500 active:text-gray-500"
+                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                    viewBox="0 0 24 24">
+                    <path v-if="showTotal" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" d="m19 9-7 7-7-7" />
+
+                    <path v-else stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m5 15 7-7 7 7" />
+                </svg>
+
+            </div>
+
+            <div v-if="showTotal">
+                <div class="py-3">
+                    <h1 class=" font-bold text-2xl">Total: {{ total }}</h1>
+                    <div class="mt-4">
+                        <label for="paid">Paid</label>
+                        <Input id="paid" type="number" v-model="form.paid" placeholder="Paid Amount" />
+                        <small class=" text-red-500 " v-if="page.props.errors.paid">{{ page.props.errors.paid }}</small>
+                    </div>
                 </div>
+                <div>
+                    <TextAreaTag v-model="form.description" />
+                </div>
+                <DefaultButton @click="Purchase()">
+                    Purchase
+                </DefaultButton>
             </div>
-            <div>
-                <TextAreaTag v-model="description" />
-            </div>
-            <DefaultButton @click="Purchase()">
-                Purchase
-            </DefaultButton>
         </div>
     </div>
 </template>
@@ -70,18 +94,25 @@
 import { ref } from 'vue';
 import NormalNav from '../Components/NormalNav.vue';
 import DefaultButton from '../Components/DefaultButton.vue';
-import { router, usePage } from '@inertiajs/vue3';
+import { router, useForm, usePage } from '@inertiajs/vue3';
 import DatePicker from '../Components/datePicker.vue';
 import Select from '../Components/Select.vue';
 import TextAreaTag from '../Components/TextAreaTag.vue';
 import Input from '../Components/Input.vue';
 const cart = ref(JSON.parse(localStorage.getItem("cart")));
+
 const total = ref(0)
-const paid = ref(0)
-const supplier = ref(null)
-const date = ref(null)
+const showTotal = ref(false)
 const page = usePage()
-const description = ref(null)
+
+const form = useForm({
+    products: null,
+    date: null,
+    supplier_id: null,
+    description: null,
+    paid: 0,
+    voucher_id: Math.random(1, 1000000)
+});
 const props = defineProps({
     suppliers: {
         type: Object,
@@ -91,10 +122,10 @@ const props = defineProps({
 
 const deleteItem = (id) => {
     cart.value = cart.value.filter(c => c.id != id)
-    changeQty()
+    cartChange()
     getTotal()
 }
-const changeQty = () => {
+const cartChange = () => {
     localStorage.setItem("cart", JSON.stringify(cart.value))
     getTotal()
 
@@ -109,10 +140,17 @@ const getTotal = () => {
 }
 getTotal()
 
-
 const Purchase = () => {
-    // console.log(cart.value, date.value, supplier.value, description.value)
-    router.post(route('purchase.store', { purchase: cart.value, date: date.value, supplier_id: supplier.value, description: description.value, paid: paid.value }))
+    // console.log(form)
+    form.products = cart.value.map(c => {
+        return { 'product_id': c.id, 'qty': c.qty, 'price': c.price }
+    })
+    form.post(route('purchase.store'), {
+        onSuccess: () => {
+            cart.value = [];
+            cartChange()
+        }
+    })
 
 }
 </script>

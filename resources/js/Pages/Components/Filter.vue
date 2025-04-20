@@ -1,13 +1,14 @@
 <template>
 
     <div class="grid grid-cols-2 gap-2">
-        <select v-model="category"
+        <!-- <select v-model="category"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option selected :value="null">Category</option>
+            <option selected :value="null">All Category</option>
             <option v-for="category in categories" :value="category.name" :key="category.id">
                 {{ category.name }}
             </option>
-        </select>
+        </select> -->
+        <Select v-model="category" :data="categories" name="All Category" :getByName="true" />
 
         <Input :type="'search'" :placeholder="'Search'" v-model="search" />
     </div>
@@ -17,6 +18,7 @@ import { debounce } from 'lodash';
 import { ref, watch } from 'vue';
 import Input from './Input.vue';
 import { router, usePage } from '@inertiajs/vue3';
+import Select from './Select.vue';
 
 const page = usePage()
 const props = defineProps({

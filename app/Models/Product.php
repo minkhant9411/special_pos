@@ -30,7 +30,7 @@ class Product extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
-    public function purchase()
+    public function purchases()
     {
         return $this->belongsToMany(Purchase::class);
     }

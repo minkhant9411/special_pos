@@ -3,7 +3,7 @@
         <Cart url="purchase.create" :qty="quantity" />
     </NormalNav>
     <div class="mt-21 m-2">
-
+        <Alert />
         <Filter :categories="categories" />
 
         <div class="grid grid-cols-2 gap-2 my-3">
@@ -23,12 +23,12 @@
                             clip-rule="evenodd" />
                     </svg>
                 </button>
-                <div class="px-5">
-                    <p class="text-gray-500 text-sm m-2">
+                <div class="p-3">
+                    <p class="text-gray-500 text-sm my-1">
                         {{ product?.category?.name ?? "No Category" }}
                     </p>
-                    <p class=" font-bold my-2">{{ product.name }}</p>
-                    <p class="text-sm my-2">MMK {{ product.price }}</p>
+                    <p class=" font-bold my-1">{{ product.name }}</p>
+                    <p class="text-sm my-1">MMK {{ product.price }}</p>
                 </div>
             </div>
         </div>
@@ -40,8 +40,11 @@ import { ref } from 'vue';
 import Cart from '../Components/Cart.vue';
 import Filter from '../Components/Filter.vue';
 import NormalNav from '../Components/NormalNav.vue';
+import Alert from '../Components/Alert.vue';
+import { usePage } from '@inertiajs/vue3';
 const cart = ref(JSON.parse(localStorage.getItem('cart') || '[]'))
 const quantity = ref(0)
+const page = usePage();
 const props = defineProps({
     purchases: Object,
     products: Object,
@@ -53,6 +56,8 @@ const getCartCount = () => {
         const item = cart.value[i];
         quantity.value += parseInt(item.qty)
     }
+    if (page.props.flash.message) quantity.value = 0
+
 }
 getCartCount()
 const addCart = (product, qty) => {
@@ -66,7 +71,6 @@ const addCart = (product, qty) => {
 
         cart.value.push({ ...product, qty: qty })
     }
-
     localStorage.setItem('cart', JSON.stringify(cart.value))
     getCartCount()
 }

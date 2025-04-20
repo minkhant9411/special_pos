@@ -16,20 +16,32 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        $categories = Category::where('is_deleted', '=', false)->get();
-        $products = Product::where('is_deleted', '=', false)
-            ->when(request()->search || request()->category, function ($query) {
-                $query->where(function ($q) {
-                    if (request()->search) {
-                        $q->where('name', 'like', '%' . request()->search . '%');
+        $search = request()->search;
+        $category = request()->category;
+
+        $categories = Category::where('is_deleted', false)
+            ->whereIn('transaction_type', ['for_purchase', 'for_both'])
+            ->get();
+
+        $products = Product::where('is_deleted', false)
+            ->whereHas('category', function ($query) {
+                $query->whereIn('transaction_type', ['for_purchase', 'for_both']);
+            })
+            ->when($search || $category, function ($query) use ($search, $category) {
+                $query->where(function ($q) use ($search, $category) {
+                    if ($search) {
+                        $q->where('name', 'like', '%' . $search . '%');
                     }
-                    if (request()->category) {
-                        $q->orWhereHas('category', function ($catQuery) {
-                            $catQuery->where('name', request()->category);
+
+                    if ($category) {
+                        $q->orWhereHas('category', function ($catQuery) use ($category) {
+                            $catQuery->where('name', $category);
                         });
                     }
                 });
-            })->with('category')->get();
+            })
+            ->with('category')
+            ->get();
         return inertia('Purchase/Index', [
             'products' => $products,
             'categories' => $categories,
@@ -54,13 +66,30 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'voucher_id' => 'unique|required',
+            'voucher_id' => 'unique:purchases,voucher_id|required',
             'date' => 'date|required',
-            'description' => 'string|nullable',
+            'description' => 'nullable|string',
             'paid' => 'integer|required',
-            'supplier_id' => 'nullable|exist:suppliers,id'
+            'supplier_id' => 'nullable|numeric|exist:suppliers,id'
         ]);
+        // dd($validate);
+        $purchase = Purchase::create([
+            'voucher_id' => $validate['voucher_id'],
+            'date' => $validate['date'],
+            'description' => $validate['description'],
+            'paid' => $validate['paid'],
+            'supplier_id' => $validate['supplier_id'],
+            'created_by' => auth()->user()->id,
+        ]);
+        foreach ($request->products as $product) {
+            $pivotData[$product['product_id']] = [
+                'quantity' => $product['qty'],
+                'price' => $product['price'],
+            ];
+        }
 
+        $purchase->products()->attach($pivotData);
+        return redirect()->route('purchase.index')->with('message', 'Purchase created successfully.');
     }
 
     /**

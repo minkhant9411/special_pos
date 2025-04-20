@@ -1,13 +1,7 @@
 <template>
     <NormalNav name="Categories" url="home" />
     <div class="mt-20 m-2">
-        <div
-            v-if="page.props.flash.message"
-            class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
-            role="alert"
-        >
-            {{ page.props.flash.message }}
-        </div>
+        <Alert />
         <div>
             <Input :type="'search'" :placeholder="'Search'" v-model="search" />
         </div>
@@ -25,6 +19,7 @@ import NormalNav from "../Components/NormalNav.vue";
 import SingleCategory from "../Components/SingleCategory.vue";
 import { ref, watch } from "vue";
 import { debounce } from "lodash";
+import Alert from "../Components/Alert.vue";
 
 const page = usePage();
 const prop = defineProps({
