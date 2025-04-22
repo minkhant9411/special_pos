@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
@@ -30,7 +31,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('purchase', PurchaseController::class);
     Route::post('/purchase/delete/{id}', [ProductController::class, 'destroy'])->name('purchase.destroy');
     Route::resource('sale', SaleController::class);
+    Route::get('history/sale', [HistoryController::class, 'sale'])->name('sale.history');
+    Route::get('history/product', [HistoryController::class, 'product'])->name('product.history');
     Route::post('/sale/delete/{id}', [SaleController::class, 'destroy'])->name('sale.destroy');
+    Route::resource('history', HistoryController::class);
+    // Route::get('/history/purchase', HistoryController::class);
+
 });
 Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');

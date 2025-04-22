@@ -1,7 +1,10 @@
 <template>
     <div class="m-2 mt-20">
         <div class="grid grid-cols-2 gap-2">
-            <DatePicker v-model="form.date" @date="(d) => form.date = d" />
+            <DatePicker v-model="form.date" @date="(d) => {
+                const date = new Date(d);
+                form.date = date.toLocaleString('sv-SE', { timeZone: 'Asia/Yangon' }).replace(' ', 'T');
+            }" />
             <Select v-if="isPurchase" v-model="form.supplier_id" :data="suppliers" name="Supplier" />
             <Select v-else v-model="form.customer_id" :data="customers" name="Customer" />
             <small class="text-red-500" v-if="page.props.errors.date">{{ page.props.errors.date }}</small>

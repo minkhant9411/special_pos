@@ -13,29 +13,34 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
 
+        $categories = Category::where('is_deleted', false)->get();
         $products = Product::where('is_deleted', false)
-            ->when(request()->search || request()->category, function ($query) {
-                $query->where(function ($q) {
-                    if (request()->search) {
-                        $q->where('name', 'like', '%' . request()->search . '%');
-                    }
-                    if (request()->category) {
-                        $q->orWhereHas('category', function ($catQuery) {
-                            $catQuery->where('name', request()->category);
-                        });
-                    }
+            ->when($request->search, function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->when($request->category, function ($query, $category) {
+                $query->whereHas('category', function ($catQuery) use ($category) {
+                    $catQuery->where('name', $category);
                 });
             })
             ->with('category')
-            ->get();
+            ->paginate(3)->withQueryString();
+        // if ($request->wantsJson()) {
+        //     return response()->json([
+        //         'products' => $products,
+        //         "categories" => $categories,
+        //         'productPagination' => $products->toArray()
+        //     ]);
+        //}
+        // ->get();
         // dd($products);
-        $categories = Category::where('is_deleted', false)->get();
         return Inertia::render('Product/Index', [
-            'products' => $products,
-            "categories" => $categories
+            'products' => inertia()->merge(fn() => $products->items()),
+            "categories" => $categories,
+            'productPagination' => $products->toArray()
         ]);
     }
 

@@ -17,6 +17,7 @@
         "@inertiajs/vue3": "^2.0.7",
         "@vitejs/plugin-vue": "^5.2.3",
         "flowbite": "^3.1.2",
+        "flowbite-vue": "^0.2.1",
         "lodash": "^4.17.21",
         "vue": "^3.5.13"
     }

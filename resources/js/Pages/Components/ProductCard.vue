@@ -1,6 +1,7 @@
 <template>
     <div class="grid grid-cols-2 gap-2 my-3">
-        <div v-for="data in datas" :key="data.id" class="w-full relative max-w-sm">
+        <div v-for="data in datas" :key="data.id"
+            class="w-full relative border rounded-lg dark:border-gray-800 border-gray-300 shadow-sm dark:shadow-gray-900 shadow-gray-100">
             <a href="#">
                 <img class="rounded-lg mx-auto w-[100%] object-cover h-40"
                     :src="[data.image_path != null ? '/storage/' + data.image_path : '/storage/profiles/default.jpg']"
@@ -16,12 +17,12 @@
                         clip-rule="evenodd" />
                 </svg>
             </button>
-            <div class="p-1">
+            <div class="p-2">
+                <p class=" font-bold">{{ data.name }}</p>
+                <p class="text-sm">MMK {{ data.price }}</p>
                 <p class="text-gray-500 text-sm">
                     {{ data?.category?.name ?? "No Category" }}
                 </p>
-                <p class=" font-bold">{{ data.name }}</p>
-                <p class="text-sm">MMK {{ data.price }}</p>
             </div>
         </div>
     </div>

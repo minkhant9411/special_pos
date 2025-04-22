@@ -7,6 +7,7 @@ use App\Models\Sale;
 use App\Models\Supplier;
 use App\SharedFunctionality;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SaleController extends Controller
 {
@@ -69,7 +70,7 @@ class SaleController extends Controller
      */
     public function show(Sale $sale)
     {
-        //
+
     }
 
     /**
@@ -94,5 +95,9 @@ class SaleController extends Controller
     public function destroy(Sale $sale)
     {
         //
+    }
+    public function history()
+    {
+        dd();
     }
 }

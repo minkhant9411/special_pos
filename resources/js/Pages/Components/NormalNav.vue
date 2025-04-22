@@ -8,8 +8,8 @@
                 d="M5 12h14M5 12l4-4m-4 4 4 4" />
         </svg>
         </Link>
-        <h1 class="text-xl">{{ name }}</h1>
-        <div class="cart grid" :class="[!!slot.default ? 'grid-cols-2' : 'grid-cols-1']">
+        <h1 class="text-md">{{ name }}</h1>
+        <div class="cart flex justify-center items-center" :class="[!!slot.default ? 'grid-cols' : 'grid-cols']">
             <slot></slot>
             <ThemeSwitch />
         </div>
