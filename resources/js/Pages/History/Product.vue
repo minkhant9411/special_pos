@@ -16,6 +16,12 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ps-10  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             </div>
         </div>
+        <div class="my-2 grid grid-cols-2 text-center gap-2">
+            <button class=" py-2 px-1 border-b" :class="[isSale ? 'border-b' : 'border-b-transparent']"
+                @click="isSale = !isSale">Sale</button>
+            <button class=" py-2 px-1 border-b" :class="[isSale ? 'border-b-transparent' : ' border-b']"
+                @click="isSale = !isSale">Purchase</button>
+        </div>
         <FwbTable class="rounded-lg">
             <FwbTableHead>
                 <FwbTableHeadCell>
@@ -25,7 +31,7 @@
                     Quantity
                 </FwbTableHeadCell>
                 <FwbTableHeadCell>
-                    Sale Revenue
+                    Total
                 </FwbTableHeadCell>
             </FwbTableHead>
             <FwbTableBody>
@@ -33,15 +39,17 @@
                     class=" border-b border-gray-200 dark:border-gray-700 rounded-lg">
                     <FwbTableCell>
                         {{ product.name }}
-                    </FwbTableCell>
+                    </FwbTableCell class="text-sm">
                     <template v-for="total in grand_total">
                         <FwbTableCell v-if="total.id == product.id">
-                            {{ total.total_quantity }}
+                            <p v-if="isSale"> {{ total.sale_total_quantity }}</p>
+                            <p v-else>{{ total.purchase_total_quantity }}</p>
                         </FwbTableCell>
                     </template>
                     <template v-for="total in grand_total">
                         <FwbTableCell v-if="total.id == product.id">
-                            {{ total.total_price }}
+                            <p v-if="isSale"> {{ total.sale_total_price }}</p>
+                            <p v-else>{{ total.purchase_total_price }}</p>
                         </FwbTableCell>
                     </template>
                 </FwbTableRow>
@@ -91,7 +99,7 @@ import NormalNav from '../Components/NormalNav.vue';
 import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { debounce } from 'lodash';
 import { router, usePage } from '@inertiajs/vue3';
-
+const isSale = ref(true)
 const loader = ref(null)
 const page = usePage();
 const queryParams = Object.fromEntries(

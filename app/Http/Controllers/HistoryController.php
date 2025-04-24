@@ -6,6 +6,7 @@ use App\Models\History;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Sale;
+use App\SharedFunctionality;
 use Carbon\Carbon;
 use Date;
 use DB;
@@ -14,9 +15,8 @@ use Inertia\Inertia;
 
 class HistoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use SharedFunctionality;
+
     public function index()
     {
         $sales = Sale::where('is_deleted', false)->get();
@@ -27,68 +27,20 @@ class HistoryController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(History $history)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(History $history)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, History $history)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(History $history)
-    {
-        //
-    }
     public function sale(Request $request)
     {
-        $request->date ? $date = $request->date : $date = Carbon::today('Asia/Yangon');
-        $today = Carbon::today('Asia/Yangon');
-        $sales = Sale::where('is_deleted', false)->with(['products', 'customer'])->get();
-        $totalAmount = Sale::whereDate('date', $today)
-            ->when($request->search, function ($query, $search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            })
-            ->whereDate('date', $date)
-            ->sum('paid');
+        $data = $this->getData($request);
         return Inertia('Sale/Show', [
-            'sales' => $sales,
-            'totalAmount' => $totalAmount,
-            'items' => ''
+            'sales' => $data->sales,
+            'totalAmount' => $data->totalAmount
+        ]);
+    }
+    public function purchase(Request $request)
+    {
+        $data = $this->getData($request);
+        return Inertia('Purchase/Show', [
+            'purchases' => $data->purchases,
+            'totalAmount' => $data->totalAmount
         ]);
     }
     public function product(Request $request)
@@ -102,21 +54,36 @@ class HistoryController extends Controller
                 'sales' => function ($q, ) use ($date) {
                     $q->whereDate('date', Carbon::parse($date));
                 }
-            ])->paginate(10)->withQueryString();
+            ])
+            ->with([
+                'purchases' => function ($q, ) use ($date) {
+                    $q->whereDate('date', Carbon::parse($date));
+                }
+            ])
+            ->paginate(10)->withQueryString();
         $grand_total = $products->map(function ($product) {
-            $total = $product->sales->sum(function ($sale) {
+            $sale_total = $product->sales->sum(function ($sale) {
                 return $sale->pivot->price * $sale->pivot->quantity;
             });
-            $total_quantity = $product->sales->sum(function ($sale) {
+            $sale_total_quantity = $product->sales->sum(function ($sale) {
                 return $sale->pivot->quantity;
             });
+            $purchase_total = $product->purchases->sum(function ($purchase) {
+                return $purchase->pivot->price * $purchase->pivot->quantity;
+            });
+            $purchase_total_quantity = $product->purchases->sum(function ($purchase) {
+                return $purchase->pivot->quantity;
+            });
+
             return [
                 'id' => $product->id,
-                'total_price' => $total,
-                'total_quantity' => $total_quantity
+                'sale_total_price' => $sale_total,
+                'purchase_total_price' => $purchase_total,
+                'sale_total_quantity' => $sale_total_quantity,
+                'purchase_total_quantity' => $purchase_total_quantity
             ];
-
         });
+        // dd($grand_total);
         return Inertia('History/Product', [
             'products' => inertia()->merge(fn() => $products->items()),
             'productPagination' => $products->toArray(),

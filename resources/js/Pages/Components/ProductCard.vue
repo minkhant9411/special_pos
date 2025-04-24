@@ -19,7 +19,11 @@
             </button>
             <div class="p-2">
                 <p class=" font-bold">{{ data.name }}</p>
-                <p class="text-sm">MMK {{ data.price }}</p>
+                <p class="text-sm" v-if="page.url == url">MMK {{
+                    data.cost_price
+                    }}
+                </p>
+                <p class="text-sm" v-else>MMK {{ data.price }}</p>
                 <p class="text-gray-500 text-sm">
                     {{ data?.category?.name ?? "No Category" }}
                 </p>
@@ -28,12 +32,16 @@
     </div>
 </template>
 <script setup>
+import { usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
+
 
 const props = defineProps({
     datas: { type: Object, default: [] }
 })
-
+const page = usePage();
 const emit = defineEmits(['add-cart'])
-
+// console.log()
+const url = ref(new URL(route('purchase.index')).pathname)
 </script>
 <style scoped></style>

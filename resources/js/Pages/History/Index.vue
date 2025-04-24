@@ -12,7 +12,7 @@ import Card from '../Components/Card.vue';
 import NormalNav from '../Components/NormalNav.vue';
 const cardsData = [
     { href: "sale.history", name: "Sales" },
-    // { href: "supplier.index", name: "Suppliers" },
+    { href: "purchase.history", name: "Purchases" },
     { href: "product.history", name: "Products" },
     // { href: "purchase.index", name: "Purchase" },
     // { href: "sale.index", name: "Sale" },

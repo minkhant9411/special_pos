@@ -41,7 +41,11 @@
                     </span>
                 </div>
                 <div class="py-2 mx-auto self-center text-sm">MMK
-                    <span class="px-2 py-1" contenteditable
+                    <span v-if="isPurchase" class="px-2 py-1" contenteditable
+                        @blur="(e) => { item.price = e.target.innerText; item.cost_price = e.target.innerText; cartChange() }">
+                        {{ item.cost_price }}
+                    </span>
+                    <span v-else class="px-2 py-1" contenteditable
                         @blur="(e) => { item.price = e.target.innerText; cartChange() }">
                         {{ item.price }}
                     </span>
@@ -139,7 +143,8 @@ const cartChange = () => {
 const getTotal = () => {
     total.value = 0
     cart.value.map((item) => {
-        total.value += item.price * item.qty
+        if (props.isPurchase) total.value += item.cost_price * item.qty;
+        else total.value += item.price * item.qty
         if (item.qty <= 0) deleteItem(item.id)
 
     })

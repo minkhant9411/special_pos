@@ -3,14 +3,19 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SupplierController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 Route::middleware('auth')->group(function () {
-    Route::inertia('/', 'Home')->name('home');
+
+
+    Route::get('/', [HomeController::class, 'home'])->name('home');
+
+
     Route::post('/logout', function () {
         auth()->logout();
         return redirect('/login');
@@ -27,15 +32,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('product', ProductController::class);
     Route::post('/product/delete/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 
-    // Route::inertia('purchase/cart', 'Purchase/Cart')->name('purchase.cart');
     Route::resource('purchase', PurchaseController::class);
     Route::post('/purchase/delete/{id}', [ProductController::class, 'destroy'])->name('purchase.destroy');
+
     Route::resource('sale', SaleController::class);
-    Route::get('history/sale', [HistoryController::class, 'sale'])->name('sale.history');
-    Route::get('history/product', [HistoryController::class, 'product'])->name('product.history');
     Route::post('/sale/delete/{id}', [SaleController::class, 'destroy'])->name('sale.destroy');
+
+    Route::get('history/sales', [HistoryController::class, 'sale'])->name('sale.history');
+    Route::get('history/purchases', [HistoryController::class, 'purchase'])->name('purchase.history');
+    Route::get('history/product', [HistoryController::class, 'product'])->name('product.history');
     Route::resource('history', HistoryController::class);
-    // Route::get('/history/purchase', HistoryController::class);
 
 });
 Route::middleware('guest')->group(function () {

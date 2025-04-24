@@ -1,12 +1,13 @@
 <template>
-    <PSHistoryTemplate :data='sales' :totalAmount="totalAmount" name="Sale" />
+
+    <PSHistoryTemplate :data='purchases' :totalAmount="totalAmount" name="Purchase" />
 </template>
 <script setup>
 import PSHistoryTemplate from '../Components/PSHistoryTemplate.vue';
 
 
 defineProps({
-    sales: Object,
+    purchases: Object,
     totalAmount: Number
 })
 

@@ -32,7 +32,7 @@ class Product extends Model
     }
     public function purchases()
     {
-        return $this->belongsToMany(Purchase::class);
+        return $this->belongsToMany(Purchase::class, 'product_purchase')->withPivot(['price', 'quantity']);
     }
     public function sales()
     {

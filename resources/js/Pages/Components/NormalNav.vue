@@ -1,6 +1,6 @@
 <template>
     <nav
-        class="flex top-0 right-0 left-0 fixed items-center justify-between flex-wrap bg-white p-4 shadow-md dark:bg-gray-800">
+        class="grid grid-cols-3 gap-3 z-40 top-0 right-0 left-0 fixed items-center justify-between flex-wrap bg-white p-4 shadow-md dark:bg-gray-800">
         <Link :href="route(url)">
         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
             width="30" height="30" fill="none" viewBox="0 0 24 24">
@@ -8,8 +8,8 @@
                 d="M5 12h14M5 12l4-4m-4 4 4 4" />
         </svg>
         </Link>
-        <h1 class="text-md">{{ name }}</h1>
-        <div class="cart flex justify-center items-center" :class="[!!slot.default ? 'grid-cols' : 'grid-cols']">
+        <h1 class="text-md text-center">{{ name }}</h1>
+        <div class="cart flex justify-end items-center" :class="[!!slot.default ? 'grid-cols' : 'grid-cols']">
             <slot></slot>
             <ThemeSwitch />
         </div>
