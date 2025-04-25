@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\Supplier;
+use App\Services\VoucherService;
 use App\SharedFunctionality;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -27,7 +28,8 @@ class SaleController extends Controller
     {
         $customers = Customer::where('is_deleted', '=', false)->get();
         return Inertia('Sale/Create', [
-            'customers' => $customers
+            'customers' => $customers,
+            'voucher_id' => 'S-' . VoucherService::generate()
         ]);
     }
 
@@ -68,9 +70,13 @@ class SaleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Sale $sale)
+    public function show($id)
     {
-
+        $sale = Sale::where('voucher_id', $id)->where('is_deleted', '=', false)->with('products')->first();
+        $grand_total = $sale->products->map(function ($product) {
+            return ['total' => $product->pivot->price * $product->pivot->quantity];
+        })->sum('total');
+        return Inertia('Sale/Detail', ['sale' => $sale, 'grand_total' => $grand_total]);
     }
 
     /**

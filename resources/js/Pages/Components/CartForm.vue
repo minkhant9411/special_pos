@@ -110,7 +110,9 @@ import Input from '../Components/Input.vue';
 const props = defineProps({
     isPurchase: { type: Boolean, default: true },
     suppliers: { type: Object, default: [] },
-    customers: { type: Object, default: [] }
+    customers: { type: Object, default: [] },
+    voucher_id: String
+
 })
 
 
@@ -121,7 +123,7 @@ const form = useForm({
     customer_id: null,
     description: null,
     paid: 0,
-    voucher_id: Math.floor(Math.random() * 1000000)
+    voucher_id: props.voucher_id
 });
 
 const cart = ref(JSON.parse(localStorage.getItem(props.isPurchase ? "purchase-cart" : "sale-cart")) || []);
@@ -152,10 +154,12 @@ const getTotal = () => {
 getTotal()
 
 const Submit = () => {
-    // console.log(form)
     form.products = cart.value.map(c => {
-        return { 'product_id': c.id, 'qty': c.qty, 'price': c.price }
+        return { 'product_id': c.id, 'qty': c.qty, 'price': props.isPurchase ? c.cost_price : c.price }
     })
+
+    // console.log(form.data())
+    // return;
     form.post(route(props.isPurchase ? 'purchase.store' : 'sale.store'), {
         onSuccess: () => {
             cart.value = [];

@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
+use App\Services\VoucherService;
 use App\SharedFunctionality;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,7 +30,8 @@ class PurchaseController extends Controller
 
         $suppliers = Supplier::where('is_deleted', '=', false)->get();
         return Inertia('Purchase/Cart', [
-            'suppliers' => $suppliers
+            'suppliers' => $suppliers,
+            'voucher_id' => 'P-' . VoucherService::generate()
         ]);
     }
 
@@ -47,6 +49,7 @@ class PurchaseController extends Controller
             'supplier_id' => 'nullable|numeric|exists:suppliers,id'
         ]);
         // dd($validate);
+
         $purchase = Purchase::create([
             'voucher_id' => $validate['voucher_id'],
             'date' => $validate['date'],

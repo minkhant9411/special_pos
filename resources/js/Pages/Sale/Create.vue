@@ -1,11 +1,11 @@
 <template>
     <NormalNav name="Cart" url="sale.index" />
-    <CartForm :suppliers="suppliers" :customers="customers" :isPurchase="false" />
+    <CartForm :customers="customers" :isPurchase="false" :voucher_id="voucher_id" />
 </template>
 <script setup>
 import CartForm from '../Components/CartForm.vue';
 import NormalNav from '../Components/NormalNav.vue';
-const props = defineProps(['suppliers', 'customers'])
+const props = defineProps(['voucher_id', 'customers'])
 
 
 </script>

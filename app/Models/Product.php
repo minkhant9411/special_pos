@@ -32,10 +32,10 @@ class Product extends Model
     }
     public function purchases()
     {
-        return $this->belongsToMany(Purchase::class, 'product_purchase')->withPivot(['price', 'quantity']);
+        return $this->belongsToMany(Purchase::class, 'product_purchase')->withPivot(['price', 'quantity', 'id']);
     }
     public function sales()
     {
-        return $this->belongsToMany(Sale::class, 'product_sale')->withPivot(['price', 'quantity']);
+        return $this->belongsToMany(Sale::class, 'product_sale')->withPivot(['price', 'quantity', 'id']);
     }
 }

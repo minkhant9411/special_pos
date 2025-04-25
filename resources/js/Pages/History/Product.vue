@@ -42,8 +42,8 @@
                     </FwbTableCell class="text-sm">
                     <template v-for="total in grand_total">
                         <FwbTableCell v-if="total.id == product.id">
-                            <p v-if="isSale"> {{ total.sale_total_quantity }}</p>
-                            <p v-else>{{ total.purchase_total_quantity }}</p>
+                            <p v-if="isSale"> {{ total.sale_total_quantity }} {{ product.unit }}</p>
+                            <p v-else>{{ total.purchase_total_quantity }} {{ product.unit }}</p>
                         </FwbTableCell>
                     </template>
                     <template v-for="total in grand_total">

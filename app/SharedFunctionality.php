@@ -18,10 +18,10 @@ trait SharedFunctionality
         $category = request()->category;
 
         $categories = Category::where('is_deleted', false)
-            ->whereIn('transaction_type', [$for, 'for_both'])
+            ->whereIn('transaction_type', [$for, 'for_both'])->latest()
             ->get();
 
-        $products = Product::where('is_deleted', false)
+        $products = Product::where('is_deleted', false)->latest()
             ->whereHas('category', function ($query) use ($for) {
                 $query->whereIn('transaction_type', [$for, 'for_both']);
             })
@@ -45,9 +45,25 @@ trait SharedFunctionality
             'categories' => $categories,
         ]);
     }
+    public function generateSequencedVoucher()
+    {
+        $prefix = 'VOUCH';
+        $date = now()->format('Ymd');
+        $sequence = $this->getNextSequenceNumber();
+
+        return "{$prefix}-{$date}-" . str_pad($sequence, 6, '0', STR_PAD_LEFT);
+    }
+
+    protected function getNextSequenceNumber()
+    {
+        // Implement database sequence or counter
+        return \DB::table('vouchers')->count() + 1;
+    }
+
+
     public function getData(Request $request)
     {
-        // $request->date ? $date = Carbon::parse($request->date) : $date = Carbon::today('Asia/Yangon');
+        $request->date ? $date = $request->date : $date = Carbon::today('Asia/Yangon');
 
         //sale
         $totalSaleAmount = Sale::when(
@@ -57,14 +73,14 @@ trait SharedFunctionality
             }
         )->when($request->date, function ($query, $date) {
             $query->whereDate('date', Carbon::parse($date));
-        })
+        })->whereDate('date', $date)
             ->sum('paid');
 
         $sales = Sale::where('is_deleted', false)->with(['products', 'customer'])->when($request->search, function ($query, $search) {
             $query->where('voucher_id', $search);
         })->when($request->date, function ($query, $date) {
             $query->whereDate('date', Carbon::parse($date));
-        })->get();
+        })->latest()->get();
 
         //purchase
         $totalPurchaseAmount = Purchase::when(
@@ -74,16 +90,17 @@ trait SharedFunctionality
             }
         )->when($request->date, function ($query, $date) {
             $query->whereDate('date', Carbon::parse($date));
-        })
+        })->whereDate('date', $date)
             ->sum('paid');
 
         $purchases = Purchase::where('is_deleted', false)->with(['products', 'supplier'])
             ->when($request->search, function ($query, $search) {
                 $query->where('voucher_id', $search);
-            })
-            ->when($request->date, function ($query, $date) {
+            })->when($request->date, function ($query, $date) {
                 $query->whereDate('date', Carbon::parse($date));
-            })->get();
+            })
+            ->latest()
+            ->get();
 
 
         if ($request->uri()->path() == Route::getRoutes()->getByName('home')->uri()) {

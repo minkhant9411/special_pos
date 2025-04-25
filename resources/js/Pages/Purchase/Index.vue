@@ -1,6 +1,5 @@
 <template>
-    <NormalNav name="Purchase">
-        <Cart url="purchase.create" :qty="quantity" />
+    <NormalNav name="Purchase" :hasDark="false">
         <Link
             class="cursor-pointer dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5"
             :href="route('purchase.history')">
@@ -10,6 +9,7 @@
                 d="M10 3v4a1 1 0 0 1-1 1H5m4 10v-2m3 2v-6m3 6v-3m4-11v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z" />
         </svg>
         </Link>
+        <Cart url="purchase.create" :qty="quantity" />
 
     </NormalNav>
     <div class="mt-21 m-3">

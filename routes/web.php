@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('sale', SaleController::class);
     Route::post('/sale/delete/{id}', [SaleController::class, 'destroy'])->name('sale.destroy');
+    // Route::post('/sale/{id}', [SaleController::class, 'show'])->name('sale.show');
 
     Route::get('history/sales', [HistoryController::class, 'sale'])->name('sale.history');
     Route::get('history/purchases', [HistoryController::class, 'purchase'])->name('purchase.history');

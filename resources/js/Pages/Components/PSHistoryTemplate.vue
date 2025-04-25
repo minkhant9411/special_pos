@@ -19,36 +19,49 @@
             class=" dark:bg-gray-800 bg-white border border-t dark:border-gray-700 border-gray-200  p-6 rounded-t-lg flex justify-end fixed bottom-0 left-0 right-0">
             <span> {{ name }} Total : {{ totalAmount }}</span>
         </div>
-        <FwbCard class="mt-3 min-w-full" v-for="item in data" :key="item.id">
-            <div class="flex justify-between">
-                <h5 class=" p-2">Voucher : {{ item.voucher_id }}</h5>
-                <h5 class=" p-2">Date : {{ new Date(item.date).getDate() }}-{{ new Date(item.date).getMonth() }}-{{ new
-                    Date(item.date).getFullYear() }}</h5>
-            </div>
-            <div class="px-5 pb-5">
-                <div class="my-3">
-                    <h3 class=" font-bold text-xl mb-2" v-if="'customer' in item">
-                        {{ item.customer?.name || 'Default Customer' }}
-                    </h3>
-                    <h3 class=" font-bold text-xl mb-2" v-else>
-                        {{ item.supplier?.name || 'Default Supplier' }}
-                    </h3>
-                    <p>Paid amount : {{ item.paid }}</p>
-                    <p>Left amount :
-
-                        {{
-                            item.products.reduce((sum, item) => {
-                                return sum + (item.pivot.quantity * item.pivot.price);
-                            }, 0) - item.paid
-                        }}
-
-                    </p>
+        <template v-if="data.length > 0">
+            <FwbCard class="mt-3 min-w-full" v-for="item in data" :key="item.id">
+                <div class="flex justify-between">
+                    <h5 class=" p-2"> {{ item.voucher_id }}</h5>
+                    <h5 class=" p-2">{{ new Date(item.created_at).toLocaleDateString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    }) }}</h5>
                 </div>
-                <div class="flex">
-                    <FwbButton class="w-full text-center">Show Detail</FwbButton>
+                <div class="px-5 pb-5">
+                    <div class="my-3">
+                        <h3 class=" font-bold text-xl mb-2" v-if="'customer' in item">
+                            {{ item.customer?.name || 'Default Customer' }}
+                        </h3>
+                        <h3 class=" font-bold text-xl mb-2" v-else>
+                            {{ item.supplier?.name || 'Default Supplier' }}
+                        </h3>
+                        <p>Paid amount : {{ item.paid }}</p>
+                        <p>Left amount :
+                            {{
+                                item.products.reduce((sum, item) => {
+                                    return sum + (item.pivot.quantity * item.pivot.price);
+                                }, 0) - item.paid
+                            }}
+                        </p>
+                    </div>
+                    <div class="flex">
+                        <FwbButton class="w-full text-center">
+                            <Link class="block w-full h-full"
+                                :href="route('customer' in item ? 'sale.show' : 'purchase.show', { id: item.voucher_id })">
+                            Show
+                            Detail
+                            </Link>
+                        </FwbButton>
+                    </div>
                 </div>
-            </div>
-        </FwbCard>
+            </FwbCard>
+        </template>
+        <template v-else>
+            <p class="text-center p-5">
+                there is no report in this day
+            </p>
+        </template>
     </div>
     <!-- <fwb-modal /> -->
 </template>
@@ -60,13 +73,20 @@ import { reactive, watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { debounce } from 'lodash';
 import { router } from '@inertiajs/vue3';
+
+defineProps({
+    data: Object,
+    totalAmount: Number,
+    name: String
+})
+
 const page = usePage();
 const queryParams = Object.fromEntries(
     new URLSearchParams(page.url.split("?")[1])
 );
 const filter = reactive({
     search: queryParams.search || null,
-    date: queryParams.date || new Date().toISOString().split('T')[0]
+    date: queryParams.date || null
 })
 watch(filter, debounce(filter => {
     let date = new Date(filter.date).toLocaleString('sv-SE', { timeZone: 'Asia/Yangon' }).replace(' ', 'T');
@@ -80,11 +100,5 @@ watch(filter, debounce(filter => {
         }
     })
 }, 500))
-defineProps({
-    data: Object,
-    totalAmount: Number,
-    name: String
-})
-
 </script>
 <style scoped></style>

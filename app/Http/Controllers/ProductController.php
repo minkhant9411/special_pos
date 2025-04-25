@@ -26,7 +26,7 @@ class ProductController extends Controller
                     $catQuery->where('name', $category);
                 });
             })
-            ->with('category')
+            ->with('category')->latest()
             ->paginate(3)->withQueryString();
         // if ($request->wantsJson()) {
         //     return response()->json([
