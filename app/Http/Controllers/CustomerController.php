@@ -12,7 +12,13 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        $customers = Customer::where('is_deleted', false)
+            ->when(request()->search, function ($query) {
+                $query->where('name', 'like', '%' . request()->search . '%');
+            })->get();
+        return inertia('Customer/Index', [
+            'customers' => $customers,
+        ]);
     }
 
     /**
@@ -20,7 +26,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Customer/Create');
     }
 
     /**
@@ -28,7 +34,17 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        Customer::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'created_by' => auth()->user()->id,
+        ]);
+        return redirect()->route('customer.index')->with('message', 'Customer created successfully.');
     }
 
     /**
@@ -44,7 +60,9 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        return inertia('Customer/Edit', [
+            'customer' => $customer,
+        ]);
     }
 
     /**
@@ -52,14 +70,27 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        $customer->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'updated_by' => auth()->user()->id,
+        ]);
+        return redirect()->route('customer.index')->with('message', 'Customer updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(Customer $customer, $id)
     {
-        //
+        $customer = Customer::find($id);
+        $customer->is_deleted = true;
+        $customer->save();
+        return redirect()->route('customer.index')->with('message', 'Customer deleted successfully.');
     }
 }

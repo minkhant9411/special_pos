@@ -59,7 +59,7 @@ class HistoryController extends Controller
                 'purchases' => function ($q, ) use ($date) {
                     $q->whereDate('date', Carbon::parse($date));
                 }
-            ])
+            ])->with('category')
             ->paginate(10)->withQueryString();
         $grand_total = $products->map(function ($product) {
             $sale_total = $product->sales->sum(function ($sale) {

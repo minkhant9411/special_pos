@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -28,6 +29,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('supplier', SupplierController::class);
     Route::post('/supplier/delete/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
+    Route::resource('customer', CustomerController::class);
+    Route::post('/customer/delete/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
 
     Route::resource('product', ProductController::class);
     Route::post('/product/delete/{id}', [ProductController::class, 'destroy'])->name('product.destroy');

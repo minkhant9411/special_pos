@@ -11,7 +11,7 @@
             <div>Action</div>
         </div> -->
         <FwbCard class="p-3 min-w-full mb-3">
-            <h1 class="text-xl mb-2"> {{ sale.customer_id == 1 ? '' : "Default Customer" }}</h1>
+            <h1 class="text-xl mb-2"> {{ sale.customer?.name || "Default Customer" }}</h1>
             <div class="px-2 py-1">
                 <span>Date: </span>
                 <span> {{ date }}</span>

@@ -77,6 +77,7 @@ class CategoryController extends Controller
     {
         $validate = $request->validate([
             'name' => 'required|string',
+            'transaction_type' => 'required|string',
             'description' => 'nullable|string',
         ]);
         // $category = Category::find($id);

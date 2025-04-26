@@ -62,6 +62,7 @@ defineProps({
 const cardsData = [
     { href: "category.index", name: "Categories" },
     { href: "supplier.index", name: "Suppliers" },
+    { href: "customer.index", name: "Customers" },
     { href: "product.index", name: "Products" },
     { href: "purchase.index", name: "Purchase" },
     { href: "sale.index", name: "Sale" },

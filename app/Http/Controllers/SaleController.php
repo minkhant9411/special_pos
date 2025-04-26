@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\Supplier;
@@ -72,7 +73,9 @@ class SaleController extends Controller
      */
     public function show($id)
     {
-        $sale = Sale::where('voucher_id', $id)->where('is_deleted', '=', false)->with('products')->first();
+        $sale = Sale::where('voucher_id', $id)->where('is_deleted', '=', false)->with(['products', 'customer'])->first();
+        if (!$sale)
+            return App::abort(404);
         $grand_total = $sale->products->map(function ($product) {
             return ['total' => $product->pivot->price * $product->pivot->quantity];
         })->sum('total');

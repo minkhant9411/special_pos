@@ -86,11 +86,12 @@ const queryParams = Object.fromEntries(
 );
 const filter = reactive({
     search: queryParams.search || null,
-    date: queryParams.date || null
+    date: queryParams.date || new Date().toISOString().split('T')[0]
 })
 watch(filter, debounce(filter => {
     let date = new Date(filter.date).toLocaleString('sv-SE', { timeZone: 'Asia/Yangon' }).replace(' ', 'T');
-    if (filter.date == '') {
+
+    if (filter.date == null || filter.date == '') {
         date = null
     }
     router.get('', { search: filter.search, date: date }, {

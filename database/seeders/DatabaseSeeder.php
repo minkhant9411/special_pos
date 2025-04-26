@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
         ]);
 
         Supplier::create([
@@ -56,27 +56,27 @@ class DatabaseSeeder extends Seeder
             'created_by' => 1
 
         ]);
-        // Product::create([
-        //     'name' => 'Pa la tar',
-        //     "category_id" => 2,
-        //     'cost_price' => 1500,
-        //     'price' => 2000,
-        //     'unit' => 'pwal',
-        //     'created_by' => 1
+        Product::create([
+            'name' => 'Pa la tar',
+            "category_id" => 2,
+            'cost_price' => 1500,
+            'price' => 2000,
+            'unit' => 'pwal',
+            'created_by' => 1
 
-        // ]);
-        // for ($i = 1; $i < 20; $i++) {
-        //     Product::create([
-        //         'name' => fake()->firstName(),
-        //         "category_id" => mt_rand(1, 3),
-        //         'cost_price' => 5000,
-        //         'price' => 5000,
-        //         'unit' => 'unit',
-        //         'created_by' => 1
+        ]);
+        for ($i = 1; $i < 20; $i++) {
+            Product::create([
+                'name' => fake()->firstName(),
+                "category_id" => mt_rand(1, 3),
+                'cost_price' => 5000,
+                'price' => 5000,
+                'unit' => 'unit',
+                'created_by' => 1
 
-        //     ]);
+            ]);
 
-        // }
+        }
 
     }
 }

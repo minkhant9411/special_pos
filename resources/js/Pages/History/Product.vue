@@ -35,25 +35,43 @@
                 </FwbTableHeadCell>
             </FwbTableHead>
             <FwbTableBody>
-                <FwbTableRow v-for="product in products" :key="product.id"
-                    class=" border-b border-gray-200 dark:border-gray-700 rounded-lg">
-                    <FwbTableCell>
-                        {{ product.name }}
-                    </FwbTableCell class="text-sm">
-                    <template v-for="total in grand_total">
-                        <FwbTableCell v-if="total.id == product.id">
-                            <p v-if="isSale"> {{ total.sale_total_quantity }} {{ product.unit }}</p>
-                            <p v-else>{{ total.purchase_total_quantity }} {{ product.unit }}</p>
-                        </FwbTableCell>
-                    </template>
-                    <template v-for="total in grand_total">
-                        <FwbTableCell v-if="total.id == product.id">
-                            <p v-if="isSale"> {{ total.sale_total_price }}</p>
-                            <p v-else>{{ total.purchase_total_price }}</p>
-                        </FwbTableCell>
-                    </template>
-                </FwbTableRow>
+                <template v-for="product in products" :key="product.id">
+                    <FwbTableRow class=" border-b border-gray-200 dark:border-gray-700 rounded-lg"
+                        v-if="(product.category.transaction_type == 'for_sale' || product.category.transaction_type == 'for_both') && isSale">
+                        <FwbTableCell>
+                            {{ product.name }}
+                        </FwbTableCell class="text-sm">
+                        <template v-for="total in grand_total">
+                            <FwbTableCell v-if="total.id == product.id">
+                                <p> {{ total.sale_total_quantity }} {{ product.unit }}</p>
+                            </FwbTableCell>
+                        </template>
+                        <template v-for="total in grand_total">
+                            <FwbTableCell v-if="total.id == product.id">
+                                <p> {{ total.sale_total_price }}</p>
+                            </FwbTableCell>
+                        </template>
+                    </FwbTableRow>
+                </template>
 
+                <template v-for="product in products" :key="product.id">
+                    <FwbTableRow class=" border-b border-gray-200 dark:border-gray-700 rounded-lg"
+                        v-if="(product.category.transaction_type == 'for_purchase' || product.category.transaction_type == 'for_both') && !isSale">
+                        <FwbTableCell>
+                            {{ product.name }}
+                        </FwbTableCell class="text-sm">
+                        <template v-for="total in grand_total">
+                            <FwbTableCell v-if="total.id == product.id">
+                                <p>{{ total.purchase_total_quantity }} {{ product.unit }}</p>
+                            </FwbTableCell>
+                        </template>
+                        <template v-for="total in grand_total">
+                            <FwbTableCell v-if="total.id == product.id">
+                                <p>{{ total.purchase_total_price }}</p>
+                            </FwbTableCell>
+                        </template>
+                    </FwbTableRow>
+                </template>
                 <FwbTableRow>
                     <FwbTableCell colspan="3">
                         <div ref="loader">

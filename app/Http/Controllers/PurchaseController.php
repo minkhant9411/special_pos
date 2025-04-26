@@ -72,9 +72,13 @@ class PurchaseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Purchase $purchase)
+    public function show($id)
     {
-        //
+        $purchase = Purchase::where('voucher_id', $id)->where('is_deleted', '=', false)->with(['products', 'supplier'])->first();
+        $grand_total = $purchase->products->map(function ($product) {
+            return ['total' => $product->pivot->price * $product->pivot->quantity];
+        })->sum('total');
+        return Inertia('Purchase/Detail', ['purchase' => $purchase, 'grand_total' => $grand_total]);
     }
 
     /**

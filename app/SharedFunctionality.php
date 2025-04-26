@@ -64,23 +64,23 @@ trait SharedFunctionality
     public function getData(Request $request)
     {
         $request->date ? $date = $request->date : $date = Carbon::today('Asia/Yangon');
-
+        // if ($request->date && $request->search)
+        //     dd('get');
         //sale
         $totalSaleAmount = Sale::when(
             $request->search,
             function ($query, $search) {
                 $query->where('voucher_id', $search);
             }
-        )->when($request->date, function ($query, $date) {
-            $query->whereDate('date', Carbon::parse($date));
-        })->whereDate('date', $date)
+        )->whereDate('date', Carbon::parse($date))
             ->sum('paid');
 
-        $sales = Sale::where('is_deleted', false)->with(['products', 'customer'])->when($request->search, function ($query, $search) {
-            $query->where('voucher_id', $search);
-        })->when($request->date, function ($query, $date) {
-            $query->whereDate('date', Carbon::parse($date));
-        })->latest()->get();
+        $sales = Sale::where('is_deleted', false)->with(['products', 'customer'])
+            ->when($request->search, function ($query, $search) {
+                $query->where('voucher_id', $search);
+            }, function ($query) use ($date) {
+                $query->whereDate('date', Carbon::parse($date));
+            })->latest()->latest()->get();
 
         //purchase
         $totalPurchaseAmount = Purchase::when(
@@ -88,19 +88,14 @@ trait SharedFunctionality
             function ($query, $search) {
                 $query->where('voucher_id', $search);
             }
-        )->when($request->date, function ($query, $date) {
-            $query->whereDate('date', Carbon::parse($date));
-        })->whereDate('date', $date)
-            ->sum('paid');
+        )->whereDate('date', Carbon::parse($date))->latest()->sum('paid');
 
         $purchases = Purchase::where('is_deleted', false)->with(['products', 'supplier'])
             ->when($request->search, function ($query, $search) {
                 $query->where('voucher_id', $search);
-            })->when($request->date, function ($query, $date) {
+            }, function ($query) use ($date) {
                 $query->whereDate('date', Carbon::parse($date));
-            })
-            ->latest()
-            ->get();
+            })->latest()->get();
 
 
         if ($request->uri()->path() == Route::getRoutes()->getByName('home')->uri()) {
