@@ -17,10 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
 
 
-    Route::post('/logout', function () {
-        auth()->logout();
-        return redirect('/login');
-    })->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 
@@ -50,6 +47,6 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::inertia('/login', 'Auth/Login')->name('login');
+    Route::get('/login', [AuthController::class, 'index'])->name('login');
 
 });

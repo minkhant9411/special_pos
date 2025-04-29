@@ -7,13 +7,17 @@
         <form @submit.prevent="submit"
             class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 w-[100vw]">
             <h1 class="text-5xl text-center pb-10">Login</h1>
+
+            <FwbAlert closable icon type="danger" v-if="message">
+                {{ message }}
+            </FwbAlert>
             <div class="mb-6">
                 <input v-model="form.email" type="email" id="email"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="john.doe@company.com" />
                 <small class="text-red-500" v-if="errors.email">{{
                     errors.email
-                    }}</small>
+                }}</small>
             </div>
 
             <div class="mb-6 relative">
@@ -37,7 +41,7 @@
                 </span>
                 <small class="text-red-500" v-if="errors.password">{{
                     errors.password
-                    }}</small>
+                }}</small>
             </div>
             <div class="mb-6 text-center">
                 <button type="submit"
@@ -49,9 +53,10 @@
     </div>
 </template>
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
+import { FwbAlert } from "flowbite-vue";
 import { ref } from "vue";
-defineProps({ errors: Object });
+defineProps({ errors: Object, message: String });
 const type = ref("password");
 const form = useForm({
     email: null,
