@@ -112,4 +112,6 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    'max_devices' => env('MAX_DEVICES_ALLOWED', 3), // Default 3 if not set
+
 ];

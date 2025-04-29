@@ -33,7 +33,7 @@ class AuthController extends Controller
     }
     protected function authenticated(Request $request, $user)
     {
-        $maxDevices = 3;
+        $maxDevices = config('auth.max_devices');
         $currentSessionId = \Session::getId();
 
         // Get all active sessions for this user
