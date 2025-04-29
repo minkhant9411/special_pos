@@ -28,7 +28,7 @@
         <FwbCard class="p-3 min-w-full">
             <h1 class="text-xl mb-2">Order Summary</h1>
             <div class="flex justify-between px-2 py-1" v-for="item in sale.products" :key="item.id">
-                <span> {{ item.name }} X {{ item.pivot.quantity }} {{ item.unit }} </span>
+                <span> {{ item.name }} x {{ item.pivot.quantity }} {{ item.unit }} </span>
                 <span>MMK {{ item.pivot.price * item.pivot.quantity }} </span>
             </div>
             <hr class="h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">

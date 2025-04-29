@@ -1,4 +1,8 @@
 <template>
+
+    <Head>
+        <title>| Home</title>
+    </Head>
     <NavBar />
 
     <div
@@ -7,7 +11,7 @@
         <Link :href="route('history.index')"
             class="absolute underline text-blue-500 right-0 top-0 p-3 hover:text-blue-600 text-sm">See Reports
         </Link>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 gap-4">
             <Link :href="route('sale.history')"
                 class="my-3 py-3 bg-green-400 text-white border border-green-200 rounded-lg shadow-sm hover:bg-green-100 dark:bg-green-800 dark:border-green-700 dark:hover:bg-green-700">
             <div class="flex justify-center m-2">
@@ -32,7 +36,7 @@
             <span class="block">Purchase</span>
             <span>{{ totalPurchaseAmount }} MMK</span>
             </Link>
-            <div
+            <!-- <div
                 class="my-3 py-3 bg-yellow-300 border text-white border-yellow-200 rounded-lg shadow-sm hover:bg-yellow-100 dark:bg-yellow-800 dark:border-yellow-700 dark:hover:bg-yellow-700">
                 <div class="flex justify-center m-2">
                     <svg class="w-12 h-12 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
@@ -43,7 +47,7 @@
                 </div>
                 <span class="block">Expense</span>
                 <span>100000ks</span>
-            </div>
+            </div> -->
         </div>
     </div>
 

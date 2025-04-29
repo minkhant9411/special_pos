@@ -1,4 +1,8 @@
 <template>
+
+    <Head>
+        <title>| Categories</title>
+    </Head>
     <NormalNav name="Categories" url="home" />
     <div class="mt-20 m-2">
         <Alert />

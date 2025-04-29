@@ -1,11 +1,13 @@
 <template>
+
+    <Head>
+        <title>| Suppliers</title>
+    </Head>
     <NormalNav name="Suppliers" url="home" />
     <div class="mt-20 m-2">
-        <div
-            v-if="page.props.flash.message"
+        <div v-if="page.props.flash.message"
             class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
-            role="alert"
-        >
+            role="alert">
             {{ page.props.flash.message }}
         </div>
         <div>

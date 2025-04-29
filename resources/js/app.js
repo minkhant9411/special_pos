@@ -10,6 +10,7 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 
 // localStorage.theme = "light";
 createInertiaApp({
+    title: (title) => `Pos ${title}`,
     resolve: (name) => {
         const pages = import.meta.glob("./Pages/**/*.vue", { eager: true });
 

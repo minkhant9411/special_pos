@@ -1,4 +1,8 @@
 <template>
+
+    <Head>
+        <title>| Customers</title>
+    </Head>
     <NormalNav name="Customers" url="home" />
     <div class="mt-20 m-2">
         <div v-if="page.props.flash.message"
