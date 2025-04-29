@@ -17,7 +17,7 @@ const date = ref(null);
 
 const emit = defineEmits(['date'])
 onMounted(() => {
-    date.value = new Date().toISOString().split('T')[0]
+    date.value = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Yangon' });
 })
 watch(date, (n) => {
     emit('date', new Date(n).toLocaleString('sv-SE', { timeZone: 'Asia/Yangon' }).replace(' ', 'T'))

@@ -17,10 +17,10 @@
             </div>
         </div>
         <div class="my-2 grid grid-cols-2 text-center gap-2">
-            <button class=" py-2 px-1 border-b" :class="[isSale ? 'border-b' : 'border-b-transparent']"
-                @click="isSale = !isSale">Sale</button>
-            <button class=" py-2 px-1 border-b" :class="[isSale ? 'border-b-transparent' : ' border-b']"
-                @click="isSale = !isSale">Purchase</button>
+            <button class=" py-2 px-1 border-b" :class="[filter.is_sale ? 'border-b' : 'border-b-transparent']"
+                @click="filter.is_sale = !filter.is_sale">Sale</button>
+            <button class=" py-2 px-1 border-b" :class="[filter.is_sale ? 'border-b-transparent' : ' border-b']"
+                @click="filter.is_sale = !filter.is_sale">Purchase</button>
         </div>
         <FwbTable class="rounded-lg">
             <FwbTableHead>
@@ -37,7 +37,7 @@
             <FwbTableBody>
                 <template v-for="product in products" :key="product.id">
                     <FwbTableRow class=" border-b border-gray-200 dark:border-gray-700 rounded-lg"
-                        v-if="(product.category.transaction_type == 'for_sale' || product.category.transaction_type == 'for_both') && isSale">
+                        v-if="(product.category.transaction_type == 'for_sale' || product.category.transaction_type == 'for_both') && filter.is_sale">
                         <FwbTableCell>
                             {{ product.name }}
                         </FwbTableCell class="text-sm">
@@ -56,7 +56,7 @@
 
                 <template v-for="product in products" :key="product.id">
                     <FwbTableRow class=" border-b border-gray-200 dark:border-gray-700 rounded-lg"
-                        v-if="(product.category.transaction_type == 'for_purchase' || product.category.transaction_type == 'for_both') && !isSale">
+                        v-if="(product.category.transaction_type == 'for_purchase' || product.category.transaction_type == 'for_both') && !filter.is_sale">
                         <FwbTableCell>
                             {{ product.name }}
                         </FwbTableCell class="text-sm">
@@ -117,7 +117,6 @@ import NormalNav from '../Components/NormalNav.vue';
 import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { debounce } from 'lodash';
 import { router, usePage } from '@inertiajs/vue3';
-const isSale = ref(true)
 const loader = ref(null)
 const page = usePage();
 const queryParams = Object.fromEntries(
@@ -125,7 +124,9 @@ const queryParams = Object.fromEntries(
 );
 const filter = reactive({
     search: queryParams.search || null,
-    date: queryParams.date || new Date().toISOString().split('T')[0]
+    date: queryParams.date || new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Yangon' }),
+    is_sale: queryParams.is_sale || true,
+
 })
 const prop = defineProps({
     products: Object,
@@ -137,7 +138,7 @@ watch(filter, debounce(filter => {
     if (filter.date == '') {
         date = null
     }
-    router.get('', { search: filter.search, date: date }, {
+    router.get('', { search: filter.search, date: date, is_sale: filter.is_sale }, {
         preserveState: true,
         preserveUrl: true,
         onSuccess: (e) => {

@@ -46,21 +46,31 @@ class HistoryController extends Controller
     public function product(Request $request)
     {
         $request->date ? $date = $request->date : $date = Carbon::today('Asia/Yangon');
-        $products = Product::where('is_deleted', false)
-            ->when($request->search, function ($query, $search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            })
-            ->with([
-                'sales' => function ($q, ) use ($date) {
-                    $q->whereDate('date', Carbon::parse($date));
-                }
-            ])
-            ->with([
-                'purchases' => function ($q, ) use ($date) {
-                    $q->whereDate('date', Carbon::parse($date));
-                }
-            ])->with('category')
-            ->paginate(10)->withQueryString();
+        if (!!$request->is_sale) {
+            $products = Product::where('is_deleted', false)
+                ->when($request->search, function ($query, $search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                ->with([
+                    'sales' => function ($q) use ($date) {
+                        $q->whereDate('date', Carbon::parse($date));
+                    }
+                ])
+                ->with('category')
+                ->paginate(10)->withQueryString();
+        } else {
+            $products = Product::where('is_deleted', false)
+                ->when($request->search, function ($query, $search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                ->with([
+                    'purchases' => function ($q) use ($date) {
+                        $q->whereDate('date', Carbon::parse($date));
+                    }
+                ])
+                ->with('category')
+                ->paginate(10)->withQueryString();
+        }
         $grand_total = $products->map(function ($product) {
             $sale_total = $product->sales->sum(function ($sale) {
                 return $sale->pivot->price * $sale->pivot->quantity;

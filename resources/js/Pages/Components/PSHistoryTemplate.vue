@@ -86,7 +86,7 @@ const queryParams = Object.fromEntries(
 );
 const filter = reactive({
     search: queryParams.search || null,
-    date: queryParams.date || new Date().toISOString().split('T')[0]
+    date: queryParams.date || new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Yangon' })
 })
 watch(filter, debounce(filter => {
     let date = new Date(filter.date).toLocaleString('sv-SE', { timeZone: 'Asia/Yangon' }).replace(' ', 'T');

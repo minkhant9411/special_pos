@@ -53,7 +53,8 @@
 
     <div class="grid grid-cols-3 gap-4 m-4 p-2">
         <template v-for="card in cardsData">
-            <Card :name="card.name" :href="card.href" v-if="$page.props.auth.user.role == card.role" />
+            <Card :name="card.name" :href="card.href"
+                v-if="$page.props.auth.user.role == card.role || $page.props.auth.user.role == 'admin'" />
         </template>
     </div>
 
