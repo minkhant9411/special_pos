@@ -3,7 +3,7 @@
     <Head>
         <title>| Categories</title>
     </Head>
-    <NormalNav name="Categories" url="home" />
+    <NormalNav name="အမျိုးအစား" url="home" />
     <div class="mt-20 m-2">
         <Alert />
         <div>

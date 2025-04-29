@@ -1,5 +1,5 @@
 <template>
-    <NormalNav name="Edit Customer" url="customer.index" />
+    <NormalNav name="ဝယ်ယူသူ" url="customer.index" />
     <CustomerForm @submit="submit" :customer="customer" />
 </template>
 <script setup>

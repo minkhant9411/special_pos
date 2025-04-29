@@ -1,5 +1,5 @@
 <template>
-    <NormalNav name="History" />
+    <NormalNav name="စာရင်း" />
 
     <div class="m-2 mt-19">
         <div class="grid grid-cols-3 gap-4 m-4 p-2">
@@ -11,9 +11,9 @@
 import Card from '../Components/Card.vue';
 import NormalNav from '../Components/NormalNav.vue';
 const cardsData = [
-    { href: "sale.history", name: "Sales" },
-    { href: "purchase.history", name: "Purchases" },
-    { href: "product.history", name: "Products" },
+    { href: "sale.history", name: "အရောင်း" },
+    { href: "purchase.history", name: "အဝယ်" },
+    { href: "product.history", name: "ပစ္စည်း" },
     // { href: "purchase.index", name: "Purchase" },
     // { href: "sale.index", name: "Sale" },
     // { href: "history.index", name: "History" },

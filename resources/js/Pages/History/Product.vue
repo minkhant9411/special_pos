@@ -1,6 +1,6 @@
 <template>
 
-    <NormalNav name="Product History" url="history.index" />
+    <NormalNav name="စာရင်း" url="history.index" />
     <div class="m-2 mt-20">
         <div class="mb-2 grid grid-cols-2 gap-2">
             <FwbInput v-model="filter.search" placeholder="Search" type="search" />

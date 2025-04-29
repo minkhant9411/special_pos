@@ -21,7 +21,7 @@
                         d="M9 10V6a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v4m3-2 .917 11.923A1 1 0 0 1 17.92 21H6.08a1 1 0 0 1-.997-1.077L6 8h12Z" />
                 </svg>
             </div>
-            <span class="block">Sale</span>
+            <span class="block">အရောင်း</span>
             <span>{{ totalSaleAmount }} MMK</span>
             </Link>
             <Link :href="route('purchase.history')"
@@ -33,7 +33,7 @@
                         d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312" />
                 </svg>
             </div>
-            <span class="block">Purchase</span>
+            <span class="block">အဝယ်</span>
             <span>{{ totalPurchaseAmount }} MMK</span>
             </Link>
             <!-- <div
@@ -63,14 +63,23 @@ defineProps({
     totalSaleAmount: Number,
     totalPurchaseAmount: Number
 })
+// const cardsData = [
+//     { href: "category.index", name: "Categories" },
+//     { href: "supplier.index", name: "Suppliers" },
+//     { href: "customer.index", name: "Customers" },
+//     { href: "product.index", name: "Products" },
+//     { href: "purchase.index", name: "Purchase" },
+//     { href: "sale.index", name: "Sale" },
+//     { href: "history.index", name: "History" },
+// ];
 const cardsData = [
-    { href: "category.index", name: "Categories" },
-    { href: "supplier.index", name: "Suppliers" },
-    { href: "customer.index", name: "Customers" },
-    { href: "product.index", name: "Products" },
-    { href: "purchase.index", name: "Purchase" },
-    { href: "sale.index", name: "Sale" },
-    { href: "history.index", name: "History" },
+    { href: "category.index", name: "အမျိုးအစား" },
+    { href: "supplier.index", name: "ရောင်းချသူ" },
+    { href: "customer.index", name: "ဝယ်ယူသူ" },
+    { href: "product.index", name: "ပစ္စည်း" },
+    { href: "purchase.index", name: "အဝယ်" },
+    { href: "sale.index", name: "အရောင်း" },
+    { href: "history.index", name: "စာရင်း" },
 ];
 </script>
 <style scoped></style>

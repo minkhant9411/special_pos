@@ -1,5 +1,5 @@
 <template>
-    <NormalNav name="Cart" url="purchase.index" />
+    <NormalNav name="အဝယ်" url="purchase.index" />
     <CartForm :suppliers="suppliers" :voucher_id="voucher_id" />
 </template>
 <script setup>

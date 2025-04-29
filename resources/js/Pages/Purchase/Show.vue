@@ -1,6 +1,6 @@
 <template>
 
-    <PSHistoryTemplate :data='purchases' :totalAmount="totalAmount" name="Purchase" />
+    <PSHistoryTemplate :data='purchases' :totalAmount="totalAmount" name="အဝယ်" />
 </template>
 <script setup>
 import PSHistoryTemplate from '../Components/PSHistoryTemplate.vue';

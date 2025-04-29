@@ -1,5 +1,5 @@
 <template>
-    <NormalNav name="Edit Category" url="category.index" />
+    <NormalNav name="အမျိုးအစား" url="category.index" />
     <CategoryForm @submit="submit" :category="category" />
 </template>
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-    <NormalNav name="Purchase" :hasDark="false">
+    <NormalNav name="အဝယ်" :hasDark="false">
         <Link
             class="cursor-pointer dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5"
             :href="route('purchase.history')">

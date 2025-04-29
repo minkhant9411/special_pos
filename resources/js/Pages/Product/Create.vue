@@ -1,5 +1,5 @@
 <template>
-    <NormalNav name="Create Product" url="product.index" />
+    <NormalNav name="ပစ္စည်း" url="product.index" />
     <ProductForm :categories="categories" @submit="submit" />
 </template>
 <script setup>

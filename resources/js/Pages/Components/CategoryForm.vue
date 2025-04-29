@@ -8,9 +8,9 @@
                 </div>
                 <div class="my-7">
                     <Select name="Transaction type" v-model="form.transaction_type" :data="[
-                        { id: 'for_both', name: 'For Both' },
-                        { id: 'for_sale', name: 'For Sale' },
-                        { id: 'for_purchase', name: 'For Purchase' },
+                        { id: 'for_both', name: '၂ခုလုံးအတွက်' },
+                        { id: 'for_sale', name: 'အရောင်းအတွက်' },
+                        { id: 'for_purchase', name: 'အဝယ်အတွက်' },
                     ]" />
 
                     <small class="text-red-500" v-if="$page.props.errors.transaction_type">{{

@@ -1,5 +1,5 @@
 <template>
-    <NormalNav name="Create Supplier" url="supplier.index" />
+    <NormalNav name="ရောင်းချသူ" url="supplier.index" />
     <SupplierForm @submit="submit" />
 </template>
 <script setup>

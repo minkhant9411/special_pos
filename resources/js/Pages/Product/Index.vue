@@ -1,5 +1,5 @@
 <template>
-    <NormalNav name="Products" />
+    <NormalNav name="ပစ္စည်း" />
 
     <div class="m-2 mt-20">
         <div v-if="$page.props.flash.message"
