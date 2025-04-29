@@ -5,7 +5,7 @@
     </Head>
     <NavBar />
 
-    <div
+    <div v-if="$page.props.auth.user.role == 'admin'"
         class="m-4 p-2 relative bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 text-center">
         <p class="text-center">Today Reports</p>
         <Link :href="route('history.index')"
@@ -52,7 +52,9 @@
     </div>
 
     <div class="grid grid-cols-3 gap-4 m-4 p-2">
-        <Card v-for="card in cardsData" :name="card.name" :href="card.href" />
+        <template v-for="card in cardsData">
+            <Card :name="card.name" :href="card.href" v-if="$page.props.auth.user.role == card.role" />
+        </template>
     </div>
 
 </template>
@@ -73,13 +75,13 @@ defineProps({
 //     { href: "history.index", name: "History" },
 // ];
 const cardsData = [
-    { href: "category.index", name: "အမျိုးအစား" },
-    { href: "supplier.index", name: "ရောင်းချသူ" },
-    { href: "customer.index", name: "ဝယ်ယူသူ" },
-    { href: "product.index", name: "ပစ္စည်း" },
-    { href: "purchase.index", name: "အဝယ်" },
-    { href: "sale.index", name: "အရောင်း" },
-    { href: "history.index", name: "စာရင်း" },
+    { href: "category.index", name: "အမျိုးအစား", role: 'admin' },
+    { href: "supplier.index", name: "ရောင်းချသူ", role: 'admin' },
+    { href: "customer.index", name: "ဝယ်ယူသူ", role: 'admin' },
+    { href: "product.index", name: "ပစ္စည်း", role: 'admin' },
+    { href: "purchase.index", name: "အဝယ်", role: 'admin' },
+    { href: "sale.index", name: "အရောင်း", role: 'casher' },
+    { href: "history.index", name: "စာရင်း", role: 'admin' },
 ];
 </script>
 <style scoped></style>

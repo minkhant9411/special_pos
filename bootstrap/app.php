@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'device.limit' => \App\Http\Middleware\DeviceLimitMiddleware::class,
+            'role' => \App\Http\Middleware\CheckRole::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
