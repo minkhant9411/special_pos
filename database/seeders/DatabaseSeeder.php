@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
+            'role' => 'admin'
         ]);
 
         // Supplier::create([
@@ -65,7 +66,7 @@ class DatabaseSeeder extends Seeder
         //     'created_by' => 1
 
         // ]);
-        // for ($i = 1; $i < 20; $i++) {
+        // for ($i = 1; $i < 30; $i++) {
         //     Product::create([
         //         'name' => fake()->firstName(),
         //         "category_id" => mt_rand(1, 3),

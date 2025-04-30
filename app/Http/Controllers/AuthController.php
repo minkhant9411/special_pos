@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserSession;
 use DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -35,12 +36,11 @@ class AuthController extends Controller
     {
         $maxDevices = config('auth.max_devices');
         $currentSessionId = \Session::getId();
-
+        // $count = count(UserSession::all());
         // Get all active sessions for this user
-        $activeSessions = $user->sessions()
-            ->where('last_activity', '>=', now()->subMinutes(config('session.lifetime')))
+        $activeSessions = UserSession::where('last_activity', '>=', now()->subMinutes(config('session.lifetime')))
             ->count();
-
+        // dd($activeSessions);
         // If user has reached device limit, remove the oldest session
         if ($activeSessions >= $maxDevices) {
             $request->session()->put('message', 'You can only be logged in on 3 devices at once. Please logout from another device.');

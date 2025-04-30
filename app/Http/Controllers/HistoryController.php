@@ -57,7 +57,7 @@ class HistoryController extends Controller
                     }
                 ])
                 ->with('category')
-                ->paginate(10)->withQueryString();
+                ->paginate(20)->withQueryString();
         } else {
             $products = Product::where('is_deleted', false)
                 ->when($request->search, function ($query, $search) {
@@ -69,7 +69,7 @@ class HistoryController extends Controller
                     }
                 ])
                 ->with('category')
-                ->paginate(10)->withQueryString();
+                ->paginate(20)->withQueryString();
         }
         $grand_total = $products->map(function ($product) {
             $sale_total = $product->sales->sum(function ($sale) {
