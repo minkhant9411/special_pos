@@ -20,7 +20,7 @@ class CheckRole
         // Check if user has any of the required roles
         if (!in_array(auth()->user()->role, $roles)) {
             // abort(403, 'Unauthorized action.');
-            // return redirect()->route('sale.index');
+            return redirect()->route('home');
         }
 
         return $next($request);

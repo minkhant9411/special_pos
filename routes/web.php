@@ -14,16 +14,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin,casher'])->group(function () {
 
+    Route::get('/', [HomeController::class, 'home'])->name('home');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
     Route::resource('sale', SaleController::class);
+    Route::post('/sale/delete/{id}', [SaleController::class, 'destroy'])->name('sale.destroy');
 
 });
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
-    Route::post('/sale/delete/{id}', [SaleController::class, 'destroy'])->name('sale.destroy');
 
-    Route::get('/', [HomeController::class, 'home'])->name('home');
 
     Route::resource('category', CategoryController::class);
     Route::post('/category/delete/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
