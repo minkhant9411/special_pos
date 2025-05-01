@@ -3,7 +3,7 @@
         <div class="w-full">
             <form @submit.prevent="submit">
                 <div class="my-7">
-                    <Input type="text" placeholder="Supplier Name" v-model="form.name" />
+                    <Input type="text" placeholder="Stuff Name" v-model="form.name" />
                 </div>
                 <div class="my-7">
                     <TextAreaTag v-model="form.description" />
@@ -24,7 +24,7 @@ import Input from "./Input.vue";
 import TextAreaTag from "./TextAreaTag.vue";
 
 const prop = defineProps({
-    supplier: {
+    stuff: {
         type: Object,
     },
 });
@@ -34,10 +34,10 @@ const form = useForm({
     description: null,
 });
 
-if (prop.supplier) {
-    form.name = prop.supplier.name;
-    form.name = prop.supplier.name;
-    form.description = prop.supplier.description;
+if (prop.stuff) {
+    form.name = prop.stuff.name;
+    form.name = prop.stuff.name;
+    form.description = prop.stuff.description;
 }
 
 const submit = () => {

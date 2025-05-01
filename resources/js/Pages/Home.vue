@@ -70,19 +70,24 @@ defineProps({
 //     { href: "category.index", name: "Categories" },
 //     { href: "supplier.index", name: "Suppliers" },
 //     { href: "customer.index", name: "Customers" },
+//     { href: "stuff.index", name: "Stuff" },
 //     { href: "product.index", name: "Products" },
 //     { href: "purchase.index", name: "Purchase" },
 //     { href: "sale.index", name: "Sale" },
 //     { href: "history.index", name: "History" },
+// { href: "account.index", name: "Account", role: 'admin' },
+// { href: "account.index", name: "Account", role: 'admin' },
 // ];
 const cardsData = [
     { href: "category.index", name: "အမျိုးအစား", role: 'admin' },
     { href: "supplier.index", name: "ရောင်းချသူ", role: 'admin' },
     { href: "customer.index", name: "ဝယ်ယူသူ", role: 'admin' },
+    { href: "stuff.index", name: "ဝန်ထမ်း", role: 'admin' },
     { href: "product.index", name: "ပစ္စည်း", role: 'admin' },
     { href: "purchase.index", name: "အဝယ်", role: 'admin' },
     { href: "sale.index", name: "အရောင်း", role: 'casher' },
     { href: "history.index", name: "စာရင်း", role: 'admin' },
+    // { href: "account.index", name: "Account", role: 'admin' },
 ];
 </script>
 <style scoped></style>
