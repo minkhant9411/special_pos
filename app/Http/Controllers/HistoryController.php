@@ -45,15 +45,18 @@ class HistoryController extends Controller
     }
     public function product(Request $request)
     {
-        $request->date ? $date = $request->date : $date = Carbon::today('Asia/Yangon');
-        if (!!$request->is_sale) {
+        $request->date ? $date = Carbon::parse($request->date) : $date = Carbon::today('Asia/Yangon');
+        $request->is_sale == null || $request->is_sale == true ? $is_sale = true : $is_sale = false;
+        // dd($is_sale);
+        // dd($date);
+        if ($is_sale) {
             $products = Product::where('is_deleted', false)
                 ->when($request->search, function ($query, $search) {
                     $query->where('name', 'like', '%' . $search . '%');
                 })
                 ->with([
                     'sales' => function ($q) use ($date) {
-                        $q->whereDate('date', Carbon::parse($date));
+                        $q->whereDate('date', $date);
                     }
                 ])
                 ->with('category')
@@ -65,7 +68,7 @@ class HistoryController extends Controller
                 })
                 ->with([
                     'purchases' => function ($q) use ($date) {
-                        $q->whereDate('date', Carbon::parse($date));
+                        $q->whereDate('date', $date);
                     }
                 ])
                 ->with('category')
