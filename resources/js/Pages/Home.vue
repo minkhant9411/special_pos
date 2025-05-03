@@ -87,7 +87,7 @@ const cardsData = [
     { href: "purchase.index", name: "အဝယ်", role: 'admin' },
     { href: "sale.index", name: "အရောင်း", role: 'casher' },
     { href: "history.index", name: "စာရင်း", role: 'admin' },
-    // { href: "account.index", name: "Account", role: 'admin' },
+    { href: "account.index", name: "အကောင့်", role: 'admin' },
 ];
 </script>
 <style scoped></style>

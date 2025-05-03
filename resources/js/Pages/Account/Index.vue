@@ -1,13 +1,9 @@
 <template>
 
-    <Head>
-        <title>| Account</title>
-    </Head>
-    <NormalNav name="Account" url="home" />
-    <div class="m-2 mt-20">
-
-        <div class="mb-2 grid grid-cols-2 gap-2">
-            <FwbInput v-model="filter.search" placeholder="Search" type="search" />
+    <NormalNav name="အကောင့်" url="home" />
+    <div class="m-2 my-20">
+        <div class="grid grid-cols-2 gap-2">
+            <Select v-model="filter.search" :data="Stuff" name="All Stuff" />
             <div class="relative">
                 <label for="Date" class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -16,70 +12,77 @@
                             d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                     </svg>
                 </label>
-                <input id="Date" type="date" v-model="filter.date"
+                <input type="month" v-model="filter.date"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ps-10  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             </div>
+
         </div>
         <div class="my-2 grid grid-cols-2 text-center gap-2">
-            <button class=" py-2 px-1 border-b" :class="[filter.is_sale ? 'border-b' : 'border-b-transparent']"
-                @click="filter.is_sale = !filter.is_sale">Sale</button>
-            <button class=" py-2 px-1 border-b" :class="[filter.is_sale ? 'border-b-transparent' : ' border-b']"
-                @click="filter.is_sale = !filter.is_sale">Purchase</button>
+            <button class=" py-2 px-1 border-b" :class="[filter.is_income ? 'border-b' : 'border-b-transparent']"
+                @click="filter.is_income = !filter.is_income">အဝင်</button>
+            <button class=" py-2 px-1 border-b" :class="[filter.is_income ? 'border-b-transparent' : ' border-b']"
+                @click="filter.is_income = !filter.is_income">အထွက်
+            </button>
         </div>
-        <FwbTable class="rounded-lg">
+        <FwbTable hoverable class="rounded-lg cursor-pointer">
             <FwbTableHead>
                 <FwbTableHeadCell>
                     Name
                 </FwbTableHeadCell>
                 <FwbTableHeadCell>
-                    Quantity
+                    Desc
                 </FwbTableHeadCell>
                 <FwbTableHeadCell>
-                    Total
+                    Amount
+                </FwbTableHeadCell>
+                <FwbTableHeadCell>
+                    Date
                 </FwbTableHeadCell>
             </FwbTableHead>
             <FwbTableBody>
-                <template v-for="product in products" :key="product.id">
-                    <FwbTableRow class=" border-b border-gray-200 dark:border-gray-700 rounded-lg"
-                        v-if="(product.category.transaction_type == 'for_sale' || product.category.transaction_type == 'for_both') && filter.is_sale">
+                <template v-for="account in accounts" :key="account.id">
+                    <FwbTableRow @click="() => { !showActionId ? showActionId = account.id : showActionId = null }"
+                        class=" border-b border-gray-200 dark:border-gray-700 rounded-lg dark:hover:bg-gray-600">
                         <FwbTableCell>
-                            {{ product.name }}
-                        </FwbTableCell class="text-sm">
-                        <template v-for="total in grand_total">
-                            <FwbTableCell v-if="total.id == product.id">
-                                <p> {{ total.sale_total_quantity }} {{ product.unit }}</p>
-                            </FwbTableCell>
-                        </template>
-                        <template v-for="total in grand_total">
-                            <FwbTableCell v-if="total.id == product.id">
-                                <p> {{ total.sale_total_price }}</p>
-                            </FwbTableCell>
-                        </template>
+                            {{ account.stuff.name }}
+                        </FwbTableCell>
+                        <FwbTableCell>
+                            {{ account.description }}
+                        </FwbTableCell>
+                        <FwbTableCell>
+                            {{ account.amount }}
+                        </FwbTableCell>
+                        <FwbTableCell class=" relative">
+                            {{ new Date(account?.created_at).toLocaleDateString() || 'no date!' }}
+                            <Link :href="route('account.destroy', account.id)" method="post"
+                                v-if="account.id == showActionId"
+                                class="top-0 right-0 h-full w-14 flex justify-center items-center bg-red-500 absolute rounded-md">
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                            </svg>
+                            </Link>
+                            <Link :href="route('account.edit', account.id)" v-if="account.id == showActionId"
+                                class="top-0 right-14  h-full w-14 flex justify-center items-center rounded-md bg-green-500 absolute">
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28" />
+                            </svg>
+                            </Link>
+                        </FwbTableCell>
                     </FwbTableRow>
                 </template>
 
-                <template v-for="product in products" :key="product.id">
-                    <FwbTableRow class=" border-b border-gray-200 dark:border-gray-700 rounded-lg"
-                        v-if="(product.category.transaction_type == 'for_purchase' || product.category.transaction_type == 'for_both') && !filter.is_sale">
-                        <FwbTableCell>
-                            {{ product.name }}
-                        </FwbTableCell class="text-sm">
-                        <template v-for="total in grand_total">
-                            <FwbTableCell v-if="total.id == product.id">
-                                <p>{{ total.purchase_total_quantity }} {{ product.unit }}</p>
-                            </FwbTableCell>
-                        </template>
-                        <template v-for="total in grand_total">
-                            <FwbTableCell v-if="total.id == product.id">
-                                <p>{{ total.purchase_total_price }}</p>
-                            </FwbTableCell>
-                        </template>
-                    </FwbTableRow>
-                </template>
-                <FwbTableRow>
-                    <FwbTableCell colspan="3">
+                <FwbTableRow class="border-b border-gray-200 dark:border-gray-700 rounded-lg dark:hover:bg-gray-600">
+                    <FwbTableCell colspan="4">
                         <div ref="loader">
-                            <div v-if="productPagination.next_page_url" role="status"
+                            <div v-if="accountPagination.next_page_url" role="status"
                                 class="p-4 border border-gray-200  rounded-sm shadow-sm animate-pulse md:p-6 dark:border-gray-700">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center justify-between">
@@ -106,7 +109,7 @@
                             </div>
 
                             <div v-else class="text-center">
-                                no more products
+                                no more accounts
                             </div>
                         </div>
                     </FwbTableCell>
@@ -114,23 +117,53 @@
             </FwbTableBody>
         </FwbTable>
     </div>
+    <div
+        class=" dark:bg-gray-800 bg-white border border-t dark:border-gray-700 border-gray-200  p-6 rounded-t-lg flex justify-between fixed bottom-0 left-0 right-0 items-center">
+        <Link :href="route('account.create')">
+        <fwb-button color="default">အကောင့်ထည့်ရန်</fwb-button>
+        </Link>
+        <span> Total : {{ totalAmount }} </span>
+    </div>
 </template>
 <script setup>
-import { FwbInput, FwbTable, FwbTableBody, FwbTableCell, FwbTableHead, FwbTableHeadCell, FwbTableRow } from 'flowbite-vue';
+import { FwbButton, FwbTable, FwbTableBody, FwbTableCell, FwbTableHead, FwbTableHeadCell, FwbTableRow } from 'flowbite-vue';
 import NormalNav from '../Components/NormalNav.vue';
-import { onMounted, onUnmounted, reactive } from 'vue';
-import { usePage } from '@inertiajs/vue3';
+import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { debounce } from 'lodash';
+import { router, usePage } from '@inertiajs/vue3';
+import Select from '../Components/Select.vue';
+const loader = ref(null)
 const page = usePage();
 const queryParams = Object.fromEntries(
     new URLSearchParams(page.url.split("?")[1])
 );
-
+const showActionId = ref(null);
 const filter = reactive({
     search: queryParams.search || null,
-    date: queryParams.date || new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Yangon' }),
-    is_sale: queryParams.is_sale || true,
+    date: queryParams.date || new Date().toISOString().slice(0, 7),
+    is_income: queryParams.is_income || true,
 
 })
+const prop = defineProps({
+    Stuff: Object,
+    accounts: Object,
+    accountPagination: Object,
+    totalAmount: Number
+})
+watch(filter, debounce(filter => {
+    // console.log(filter.date);
+    // return
+    // let date = new Date(filter.date).toLocaleString('sv-SE', { timeZone: 'Asia/Yangon' }).replace(' ', 'T');
+    // if (filter.date == '') {
+    //     date = null
+    // }
+    router.get('', { search: filter.search, date: filter.date, is_income: filter.is_income }, {
+        preserveState: true,
+        preserveUrl: true,
+        onSuccess: (e) => {
+        }
+    })
+}, 500))
 const checkVisibility = () => {
     if (!loader.value) return;
 
@@ -141,12 +174,12 @@ const checkVisibility = () => {
 };
 
 const loadMore = () => {
-    if (!prop.productPagination.next_page_url) return
-    router.get(prop.productPagination.next_page_url, {}, {
+    if (!prop.accountPagination.next_page_url) return
+    router.get(prop.accountPagination.next_page_url, {}, {
         preserveState: true,
         preserveScroll: true,
         preserveUrl: true,
-        only: ['products', 'productPagination', 'grand_total']
+        only: ['accounts', 'accountPagination', 'grand_total']
     });
 };
 
@@ -159,4 +192,9 @@ onUnmounted(() => {
     window.removeEventListener('scroll', checkVisibility);
 });
 </script>
-<style scoped></style>
+
+<style scoped>
+table th td {
+    border: 1px;
+}
+</style>

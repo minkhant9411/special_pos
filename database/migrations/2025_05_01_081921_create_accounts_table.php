@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->text('description')->nullable();
-            $table->enum('type', ['I', 'E', 'B']);
-            $table->double('amount')->nullable();
+            $table->enum('type', ['I', 'E']);
+            $table->double('amount');
             $table->unsignedBigInteger('stuff_id')->nullable();
             $table->foreign('stuff_id')->references('id')->on('stuffs')->onDelete('set null');
             $table->unsignedBigInteger('created_by')->nullable();

@@ -48,6 +48,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('history', HistoryController::class);
 
     Route::resource('account', AccountController::class);
+    Route::post('/account/delete/{id}', [AccountController::class, 'destroy'])->name('account.destroy');
 
     Route::resource('stuff', StuffController::class);
     Route::post('/stuff/delete/{id}', [StuffController::class, 'destroy'])->name('stuff.destroy');

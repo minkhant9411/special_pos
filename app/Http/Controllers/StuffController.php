@@ -95,6 +95,6 @@ class StuffController extends Controller
         $stuff = Stuff::find($id);
         $stuff->is_deleted = true;
         $stuff->save();
-        return redirect()->route('stuff.index')->with('message', 'Stuff deleted successfully.');
+        return redirect()->route('stuff.index')->with('message', 'Stuffစ deleted successfully.');
     }
 }

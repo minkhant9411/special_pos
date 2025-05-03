@@ -38,21 +38,21 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'customer1',
         //     'description' => 'yangon 19th street, 09797797797'
         // ]);
-        Category::create([
-            'name' => 'Drinks',
-            'transaction_type' => 'for_both',
-            'created_by' => 1
-        ]);
-        Category::create([
-            'name' => 'Breakfast',
-            'transaction_type' => 'for_sale',
-            'created_by' => 1
-        ]);
-        Category::create([
-            'name' => 'Kitchen',
-            'transaction_type' => 'for_purchase',
-            'created_by' => 1
-        ]);
+        // Category::create([
+        //     'name' => 'Drinks',
+        //     'transaction_type' => 'for_both',
+        //     'created_by' => 1
+        // ]);
+        // Category::create([
+        //     'name' => 'Breakfast',
+        //     'transaction_type' => 'for_sale',
+        //     'created_by' => 1
+        // ]);
+        // Category::create([
+        //     'name' => 'Kitchen',
+        //     'transaction_type' => 'for_purchase',
+        //     'created_by' => 1
+        // ]);
         // Product::create([
         //     'name' => 'Shark',
         //     "category_id" => 1,
@@ -71,18 +71,18 @@ class DatabaseSeeder extends Seeder
         //     'created_by' => 1
 
         // ]);
-        for ($i = 1; $i < 30; $i++) {
-            Product::create([
-                'name' => fake()->firstName(),
-                "category_id" => mt_rand(1, 3),
-                'cost_price' => 5000,
-                'price' => 5000,
-                'unit' => 'unit',
-                'created_by' => 1
+        // for ($i = 1; $i < 30; $i++) {
+        //     Product::create([
+        //         'name' => fake()->firstName(),
+        //         "category_id" => mt_rand(1, 3),
+        //         'cost_price' => 5000,
+        //         'price' => 5000,
+        //         'unit' => 'unit',
+        //         'created_by' => 1
 
-            ]);
+        //     ]);
 
-        }
+        // }
 
     }
 }
