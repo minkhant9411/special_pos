@@ -72,6 +72,8 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $img_url = Storage::disk('public')->put('product_image', $request->image);
+            // $img_url = $request->file('image')->store(public_path('storage/product_image'), );
+            dd($img_url);
         }
         $product = Product::create([
             'name' => $validate['name'],

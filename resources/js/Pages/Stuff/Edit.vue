@@ -9,8 +9,11 @@ import NormalNav from "../Components/NormalNav.vue";
 
 const page = usePage();
 const stuff = page.props.stuff;
-const submit = (data) => {
-    data.put(route("stuff.update", stuff.id), {});
+const submit = (form) => {
+    form.transform((data) => ({
+        ...data,
+        _method: "PUT",
+    })).post(route("stuff.update", stuff.id), { forceFormData: true, });
 };
 </script>
 <style scoped></style>
