@@ -4,26 +4,26 @@
             <div class="grid grid-cols-2 gap-2 my-7">
                 <Select v-model="form.stuff_id" :data="stuff" name="Select Name" />
                 <Select v-model="form.type" :data="[
-                    { name: 'Income', id: 'I' },
-                    { name: 'Expense', id: 'E' }]" name="Select type" />
+                    { name: 'အဝင်', id: 'I' },
+                    { name: 'အထွက်', id: 'E' }]" name="Select type" />
                 <small class="text-red-500" v-if="$page.props.errors.stuff_id">{{
                     $page.props.errors.stuff_id
-                    }}</small>
+                }}</small>
                 <small class="text-red-500" v-if="$page.props.errors.type">{{
                     $page.props.errors.type
-                    }}</small>
+                }}</small>
             </div>
             <div class="my-7">
                 <Input placeholder="Amount" type="number" v-model="form.amount" />
                 <small class="text-red-500" v-if="$page.props.errors.amount">{{
                     $page.props.errors.amount
-                    }}</small>
+                }}</small>
             </div>
             <div class="my-7">
                 <TextAreaTag v-model="form.description" />
                 <small class="text-red-500" v-if="$page.props.errors.description">{{
                     $page.props.errors.description
-                    }}</small>
+                }}</small>
             </div>
             <div class="my-7">
                 <button type="submit"
