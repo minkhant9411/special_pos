@@ -23,7 +23,7 @@
             </div>
             <div class="px-2 py-1">
                 <p class="text-red-500 underline cursor-pointer" @click="() => {
-                    router.post(route('purchase.destroy', purchase))
+                    router.post(route('purchase.destroy', { purchase, _method: 'PUT' }))
                 }">
                     Delete Voucher
                 </p>
@@ -37,7 +37,7 @@
             <div class="flex justify-between px-2 py-1" v-for="item in purchase.products" :key="item.id">
                 <span> {{ item.name }} x {{ item.pivot.quantity }} {{ item.unit }} </span>
                 <span>MMK {{ item.pivot.price * item.pivot.quantity }} <svg v-if="edit" @click="() => {
-                    router.put(route('purchase.update', { purchase: purchase, product_id: item.id, delete: true }))
+                    router.post(route('purchase.update', { purchase: purchase, product_id: item.id, delete: true, _method: 'PUT' }))
                 }" class="w-5 h-5 cursor-pointer text-gray-800 dark:text-red-500 inline" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
