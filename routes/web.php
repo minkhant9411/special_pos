@@ -38,7 +38,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/product/delete/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 
     Route::resource('purchase', PurchaseController::class);
-    Route::post('/purchase/delete/{id}', [ProductController::class, 'destroy'])->name('purchase.destroy');
+    Route::post('/purchase/delete/{id}', [PurchaseController::class, 'destroy'])->name('purchase.destroy');
 
     // Route::post('/sale/{id}', [SaleController::class, 'show'])->name('sale.show');
 

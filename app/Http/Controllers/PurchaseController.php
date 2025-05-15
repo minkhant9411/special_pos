@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -78,7 +79,9 @@ class PurchaseController extends Controller
         $grand_total = $purchase->products->map(function ($product) {
             return ['total' => $product->pivot->price * $product->pivot->quantity];
         })->sum('total');
-        return Inertia('Purchase/Detail', ['purchase' => $purchase, 'grand_total' => $grand_total]);
+        $products = Product::where('is_deleted', '=', false)->get();
+
+        return Inertia('Purchase/Detail', ['purchase' => $purchase, 'grand_total' => $grand_total, 'products' => $products]);
     }
 
     /**
@@ -94,14 +97,56 @@ class PurchaseController extends Controller
      */
     public function update(Request $request, Purchase $purchase)
     {
-        //
+        if ($request->has('delete')) {
+            $purchase->products()->detach($request->product_id);
+            return redirect()->back()->with('message', 'Product removed successfully.');
+        }
+        if ($request->has('paid') && $request->paid_only) {
+            $request->validate([
+                'paid' => 'numeric|required|min:0',
+            ]);
+            $purchase->paid = $request->paid;
+            $purchase->save();
+            return redirect()->back()->with('message', 'Purchase updated successfully.');
+        }
+        $validate = $request->validate([
+            'productId' => 'required|exists:products,id',
+            "quantity" => 'required|numeric|min:1',
+            "price" => 'required|numeric|min:1',
+        ]);
+        // Check if the product already exists in the pivot table
+        $existingProduct = $purchase->products()->where('product_id', $validate['productId'])->exists();
+
+        if ($existingProduct) {
+            // Update the existing pivot record
+            $purchase->products()->updateExistingPivot($validate['productId'], [
+                'quantity' => $validate['quantity'],
+                'price' => $validate['price'],
+            ]);
+        } else {
+            // Attach the new product to the pivot table
+            $purchase->products()->attach($validate['productId'], [
+                'quantity' => $validate['quantity'],
+                'price' => $validate['price'],
+            ]);
+        }
+
+        $purchase->save();
+        return redirect()->back()->with('message', 'Purchase updated successfully.');
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Purchase $purchase)
+    public function destroy($id)
     {
-        //
+        $purchase = Purchase::find($id);
+        if (!$purchase)
+            return App::abort(404);
+        $purchase->products()->detach();
+        $purchase->is_deleted = true;
+        $purchase->save();
+        return redirect()->route('purchase.history')->with('message', 'Purchase deleted successfully.');
     }
 }

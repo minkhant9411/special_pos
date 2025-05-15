@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App;
 use App\Models\Customer;
+use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Supplier;
 use App\Services\VoucherService;
@@ -79,7 +80,8 @@ class SaleController extends Controller
         $grand_total = $sale->products->map(function ($product) {
             return ['total' => $product->pivot->price * $product->pivot->quantity];
         })->sum('total');
-        return Inertia('Sale/Detail', ['sale' => $sale, 'grand_total' => $grand_total]);
+        $products = Product::where('is_deleted', '=', false)->get();
+        return Inertia('Sale/Detail', ['sale' => $sale, 'grand_total' => $grand_total, 'products' => $products]);
     }
 
     /**
@@ -95,18 +97,60 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {
-        //
+        if ($request->has('delete')) {
+            $sale->products()->detach($request->product_id);
+            return redirect()->back()->with('message', 'Product removed successfully.');
+        }
+        if ($request->has('paid') && $request->paid_only) {
+            $request->validate([
+                'paid' => 'numeric|required|min:0',
+            ]);
+            $sale->paid = $request->paid;
+            $sale->save();
+            return redirect()->back()->with('message', 'Sale updated successfully.');
+        }
+        $validate = $request->validate([
+            'productId' => 'required|exists:products,id',
+            "quantity" => 'required|numeric|min:1',
+            "price" => 'required|numeric|min:1',
+        ]);
+        // Check if the product already exists in the pivot table
+        $existingProduct = $sale->products()->where('product_id', $validate['productId'])->exists();
+
+        if ($existingProduct) {
+            // Update the existing pivot record
+            $sale->products()->updateExistingPivot($validate['productId'], [
+                'quantity' => $validate['quantity'],
+                'price' => $validate['price'],
+            ]);
+        } else {
+            // Attach the new product to the pivot table
+            $sale->products()->attach($validate['productId'], [
+                'quantity' => $validate['quantity'],
+                'price' => $validate['price'],
+            ]);
+        }
+
+        $sale->save();
+        return redirect()->back()->with('message', 'Sale updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sale $sale)
+    public function destroy($id)
     {
-        //
+        $sale = Sale::find($id);
+        if (!$sale)
+            return App::abort(404);
+        $sale->products()->detach();
+        $sale->is_deleted = true;
+        $sale->save();
+        return redirect()->route('sale.history')->with('message', 'Sale deleted successfully.');
     }
     public function history()
     {
-        dd();
+
     }
 }

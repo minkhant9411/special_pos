@@ -1,6 +1,11 @@
 <template>
     <NormalNav :name="name" url="history.index" />
     <div class="m-3 my-20">
+        <FwbAlert closable icon type="danger" class="my-2" v-if="$page.props.flash.message">{{ $page.props.flash.message
+            }}
+        </FwbAlert>
+        <!-- <FwbAlert closable icon type="danger" v-if="$page.props.flash.d_message">{{ $page.props.flash.d_message }}
+        </FwbAlert> -->
         <div class="grid grid-cols-2 gap-2">
             <Input type="search" placeholder="Search Voucher" v-model="filter.search" />
             <div class="relative">
@@ -36,6 +41,9 @@
                         <h3 class=" font-bold text-xl mb-2" v-else>
                             {{ item.supplier?.name || 'Default Supplier' }}
                         </h3>
+                        <p>Total amount : {{item.products.reduce((sum, item) => {
+                            return sum + (item.pivot.quantity * item.pivot.price);
+                        }, 0)}}</p>
                         <p>Paid amount : {{ item.paid }}</p>
                         <p>Left amount :
                             {{
@@ -44,6 +52,7 @@
                                 }, 0) - item.paid
                             }}
                         </p>
+
                     </div>
                     <div class="flex">
                         <FwbButton class="w-full text-center">
@@ -66,7 +75,7 @@
     <!-- <fwb-modal /> -->
 </template>
 <script setup>
-import { FwbButton, FwbCard } from 'flowbite-vue';
+import { FwbAlert, FwbButton, FwbCard } from 'flowbite-vue';
 import NormalNav from '../Components/NormalNav.vue';
 import Input from './Input.vue';
 import { reactive, watch } from 'vue';

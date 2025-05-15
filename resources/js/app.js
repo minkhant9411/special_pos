@@ -3,10 +3,12 @@ import "flowbite/dist/flowbite.min.css";
 import "../css/app.css";
 import "flowbite/dist/flowbite.min.js";
 import "./themeSwitch.js";
+import "vue-select/dist/vue-select.css";
 
 import { createApp, h } from "vue";
 import { createInertiaApp, Head, Link } from "@inertiajs/vue3";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
+import VueSelect from "vue-select";
 
 // localStorage.theme = "light";
 createInertiaApp({
@@ -24,6 +26,7 @@ createInertiaApp({
             .use(ZiggyVue)
             .component("Head", Head)
             .component("Link", Link)
+            .component("v-select", VueSelect)
             .mount(el);
     },
     progress: {
