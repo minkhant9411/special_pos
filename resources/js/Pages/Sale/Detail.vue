@@ -3,7 +3,8 @@
 
     <NormalNav :name="sale.voucher_id" url="sale.history" />
     <div class="m-2 mt-20">
-        <FwbAlert closable icon type="success" v-if="$page.props.flash.message">{{ $page.props.flash.message }}
+        <FwbAlert closable icon type="success" class="my-2" v-if="$page.props.flash.message">{{
+            $page.props.flash.message }}
         </FwbAlert>
         <FwbCard class="p-3 min-w-full mb-3">
             <h1 class="text-xl mb-2"> {{ sale.customer?.name || "Default Customer" }}</h1>
@@ -148,7 +149,7 @@ watch(selectProduct, (p) => {
 })
 
 watch(paid, debounce((p) => {
-    router.put(route('sale.update', { sale: props.sale, paid: p, paid_only: true }))
+    router.post(route('sale.update', { sale: props.sale, paid: p, paid_only: true, _method: 'PUT' }))
 }, 500))
 
 

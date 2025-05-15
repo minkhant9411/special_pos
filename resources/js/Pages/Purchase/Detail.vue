@@ -150,7 +150,7 @@ watch(selectProduct, (p) => {
 })
 
 watch(paid, debounce((p) => {
-    router.put(route('purchase.update', { purchase: props.purchase, paid: p, paid_only: true }))
+    router.put(route('purchase.update', { purchase: props.purchase, paid: p, paid_only: true, _method: 'PUT' }))
 }, 500))
 
 
