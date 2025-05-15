@@ -72,7 +72,7 @@ trait SharedFunctionality
             function ($query, $search) {
                 $query->where('voucher_id', $search);
             }
-        )->whereDate('date', Carbon::parse($date))
+        )->where('is_deleted', false)->whereDate('date', Carbon::parse($date))
             ->sum('paid');
 
         $sales = Sale::where('is_deleted', false)->with(['products', 'customer'])
@@ -88,7 +88,7 @@ trait SharedFunctionality
             function ($query, $search) {
                 $query->where('voucher_id', $search);
             }
-        )->whereDate('date', Carbon::parse($date))->latest()->sum('paid');
+        )->where('is_deleted', false)->whereDate('date', Carbon::parse($date))->latest()->sum('paid');
 
         $purchases = Purchase::where('is_deleted', false)->with(['products', 'supplier'])
             ->when($request->search, function ($query, $search) {
