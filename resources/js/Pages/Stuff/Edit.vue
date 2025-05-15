@@ -1,5 +1,5 @@
 <template>
-    <NormalNav name="ဝန်ထမ်း" url="stuff.index" />
+    <NormalNav name="အကောင့်" url="stuff.index" />
     <StuffForm @submit="submit" :stuff="stuff" />
 </template>
 <script setup>

@@ -3,7 +3,7 @@
         <div class="w-full">
             <form @submit.prevent="submit">
                 <div class="my-7">
-                    <Input type="text" placeholder="Stuff Name" v-model="form.name" />
+                    <Input type="text" placeholder="Account Name" v-model="form.name" />
                 </div>
                 <div class="my-7">
                     <TextAreaTag v-model="form.description" />
