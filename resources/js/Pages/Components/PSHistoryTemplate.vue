@@ -41,14 +41,24 @@
                         <h3 class=" font-bold text-xl mb-2" v-else>
                             {{ item.supplier?.name || 'Default Supplier' }}
                         </h3>
-                        <p>Total amount : {{item.products.reduce((sum, item) => {
+                        <p v-if="!item.voucher_id.startsWith('V-')">Total amount : {{item.products.reduce((sum, item) => {
                             return sum + (item.pivot.quantity * item.pivot.price);
+                            }, 0)}}</p>
+                        <p v-else>Total amount : {{item.vinyls.reduce((sum, item) => {
+                            return sum + (item.length * item.width * item.pivot.quantity * item.pivot.price);
                         }, 0)}}</p>
                         <p>Paid amount : {{ item.paid }}</p>
-                        <p>Left amount :
+                        <p v-if="!item.voucher_id.startsWith('V-')">Left amount :
                             {{
                                 item.products.reduce((sum, item) => {
                                     return sum + (item.pivot.quantity * item.pivot.price);
+                                }, 0) - item.paid
+                            }}
+                        </p>
+                        <p v-else>Left amount :
+                            {{
+                                item.vinyls.reduce((sum, item) => {
+                                    return sum + (item.length * item.width * item.pivot.quantity * item.pivot.price);
                                 }, 0) - item.paid
                             }}
                         </p>

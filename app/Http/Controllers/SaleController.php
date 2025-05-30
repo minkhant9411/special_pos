@@ -74,12 +74,21 @@ class SaleController extends Controller
      */
     public function show($id)
     {
-        $sale = Sale::where('voucher_id', $id)->where('is_deleted', '=', false)->with(['products', 'customer'])->first();
+        $sale = Sale::where('voucher_id', $id)->where('is_deleted', '=', false)->with(['products', 'customer', 'vinyls'])->first();
         if (!$sale)
             return App::abort(404);
-        $grand_total = $sale->products->map(function ($product) {
-            return ['total' => $product->pivot->price * $product->pivot->quantity];
-        })->sum('total');
+
+        $grand_total = 0;
+        // dd($sale->vinyls);
+        if ($sale->products->count() > 0) {
+            $grand_total = $sale->products->map(function ($product) {
+                return ['total' => $product->pivot->price * $product->pivot->quantity];
+            })->sum('total');
+        } else {
+            $grand_total = $sale->vinyls->map(function ($vinyl) {
+                return ['total' => $vinyl->length * $vinyl->width * $vinyl->pivot->price * $vinyl->pivot->quantity];
+            })->sum('total');
+        }
         $products = Product::where('is_deleted', '=', false)->get();
         return Inertia('Sale/Detail', ['sale' => $sale, 'grand_total' => $grand_total, 'products' => $products]);
     }
@@ -97,9 +106,13 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {
-        if ($request->has('delete')) {
+        if ($request->has('delete_product')) {
             $sale->products()->detach($request->product_id);
             return redirect()->back()->with('message', 'Product removed successfully.');
+        }
+        if ($request->has('delete_vinyl')) {
+            $sale->vinyls()->detach($request->vinyl_id);
+            return redirect()->back()->with('message', 'Vinyl removed successfully.');
         }
         if ($request->has('paid') && $request->paid_only) {
             $request->validate([

@@ -25,4 +25,8 @@ class Sale extends Model
     {
         return $this->belongsToMany(Product::class)->withPivot(['price', 'quantity', 'id']);
     }
+    public function vinyls()
+    {
+        return $this->belongsToMany(Vinyl::class, 'vinyl_sale')->withPivot(['price', 'quantity', 'id']);
+    }
 }

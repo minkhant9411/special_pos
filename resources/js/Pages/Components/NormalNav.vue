@@ -1,7 +1,7 @@
 <template>
     <nav
         class="flex z-40 top-0 right-0 left-0 fixed items-center justify-between bg-white p-4 shadow-md dark:bg-gray-800">
-        <Link :href="route(url)">
+        <Link :href="route(url)" v-if="back">
         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
             width="30" height="30" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -27,6 +27,10 @@ const props = defineProps({
     hasDark: {
         type: Boolean,
         default: true
+    },
+    back: {
+        default: true,
+        type: Boolean
     }
 });
 </script>

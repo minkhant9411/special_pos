@@ -33,17 +33,34 @@
                 <h1 class="text-xl mb-2">Order Summary</h1>
                 <p class="cursor-pointer underline text-blue-500 text-xl" @click="edit = !edit">edit</p>
             </div>
-            <div class="flex justify-between px-2 py-1" v-for="item in sale.products" :key="item.id">
-                <span> {{ item.name }} x {{ item.pivot.quantity }} {{ item.unit }} </span>
-                <span>MMK {{ item.pivot.price * item.pivot.quantity }} <svg v-if="edit" @click="() => {
-                    router.post(route('sale.update', { sale: sale, product_id: item.id, delete: true, _method: 'PUT' }))
-                }" class="w-5 h-5 cursor-pointer text-gray-800 dark:text-red-500 inline" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                    </svg>
-                </span>
-            </div>
+            <template v-if="sale.products.length > 0">
+                <div class="flex justify-between px-2 py-1" v-for="item in sale.products" :key="item.id">
+                    <span> {{ item.name }} x {{ item.pivot.quantity }} {{ item.unit }} </span>
+                    <span>MMK {{ item.pivot.price * item.pivot.quantity }} <svg v-if="edit" @click="() => {
+                        router.post(route('sale.update', { sale: sale, product_id: item.id, delete_product: true, _method: 'PUT' }))
+                    }" class="w-5 h-5 cursor-pointer text-gray-800 dark:text-red-500 inline" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                        </svg>
+                    </span>
+                </div>
+            </template>
+            <template v-if="sale.vinyls.length > 0">
+                <div class="flex justify-between px-2 py-1" v-for="item in sale.vinyls" :key="item.id">
+                    <span> {{ item.width }} x {{ item.length }} x {{ item.pivot.quantity }} {{ item.unit }} </span>
+                    <span>MMK {{ item.length * item.width * item.pivot.price * item.pivot.quantity }} <svg v-if="edit"
+                            @click="() => {
+                                router.post(route('sale.update', { sale: sale, vinyl_id: item.id, delete_vinyl: true, _method: 'PUT' }))
+                            }" class="w-5 h-5 cursor-pointer text-gray-800 dark:text-red-500 inline" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                        </svg>
+                    </span>
+                </div>
+            </template>
+
             <hr class="h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">
             <div class="flex justify-between px-2 py-1">
                 <span>Total: </span>
@@ -60,7 +77,8 @@
                 <span>MMK {{ grand_total - sale.paid }} </span>
             </div>
         </FwbCard>
-        <div v-if="showEdit" class="fixed py-3 bottom-0 left-0 w-full bg-white dark:bg-gray-800 rounded-t-xl px-3">
+        <div v-if="showEdit && !sale.voucher_id.startsWith('V-')"
+            class="fixed py-3 bottom-0 left-0 w-full bg-white dark:bg-gray-800 rounded-t-xl px-3">
             <div class="flex justify-center" @click="showEdit = !showEdit">
                 <svg class="w-6 h-6 cursor-pointer text-gray-800 dark:text-white hover:text-gray-500 focus:text-gray-500 active:text-gray-500"
                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
@@ -96,7 +114,7 @@
             </div>
         </div>
 
-        <div class="flex justify-center" v-if="!showEdit">
+        <div class="flex justify-center" v-if="!showEdit && !sale.voucher_id.startsWith('V-')">
             <button @click="showEdit = !showEdit"
                 class="fixed bottom-2 right-[50%] translate-x-[50%] p-3 bg-yellow-500 focus:ring-yellow-800 focus:ring-2 dark:bg-gray-700 dark:focus:ring-gray-500 rounded-2xl">
                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -168,14 +186,4 @@ const Submit = () => {
     })
 }
 </script>
-<style scoped>
-.select {
-
-    --vs-border-color: #454545;
-    --vs-dropdown-bg: #282c34;
-    --vs-dropdown-color: #ffffff;
-    --vs-dropdown-option-color: #ffffff;
-    --vs-selected-color: #eeeeee;
-    --vs-search-input-color: #eeeeee;
-}
-</style>
+<style scoped></style>

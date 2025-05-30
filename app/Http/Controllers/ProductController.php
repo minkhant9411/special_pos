@@ -25,6 +25,8 @@ class ProductController extends Controller
                 $query->whereHas('category', function ($catQuery) use ($category) {
                     $catQuery->where('name', $category);
                 });
+            })->whereHas('category', function ($query) {
+                $query->where('name', '!=', 'vinyl');
             })
             ->with('category')->latest()
             ->paginate(3)->withQueryString();

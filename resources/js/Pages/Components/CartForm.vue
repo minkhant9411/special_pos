@@ -84,7 +84,7 @@
                     <h1 class=" font-bold text-2xl">Total: {{ total }}</h1>
                     <div class="mt-4">
                         <label for="paid">Paid</label>
-                        <Input id="paid" type="number" v-model="form.paid" placeholder="Paid Amount" />
+                        <Input type="number" v-model="form.paid" placeholder="Paid Amount" />
                         <small class=" text-red-500 " v-if="page.props.errors.paid">{{ page.props.errors.paid }}</small>
                     </div>
                 </div>

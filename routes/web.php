@@ -11,6 +11,8 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\StuffController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\VinylController;
+use App\Models\Vinyl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +55,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('stuff', StuffController::class);
     Route::post('/stuff/delete/{id}', [StuffController::class, 'destroy'])->name('stuff.destroy');
 
+    Route::resource('vinyl', VinylController::class);
 
 });
 Route::middleware('guest')->group(function () {
