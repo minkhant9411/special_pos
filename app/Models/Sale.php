@@ -27,6 +27,6 @@ class Sale extends Model
     }
     public function vinyls()
     {
-        return $this->belongsToMany(Vinyl::class, 'vinyl_sale')->withPivot(['price', 'quantity', 'id']);
+        return $this->belongsToMany(Vinyl::class, 'vinyl_sale')->withPivot(['price', 'quantity', 'id'])->withTimestamps();
     }
 }

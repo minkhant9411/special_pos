@@ -18,9 +18,9 @@
         </div>
         <div class="my-2 grid grid-cols-2 text-center gap-2">
             <button class=" py-2 px-1 border-b" :class="[filter.is_sale ? 'border-b' : 'border-b-transparent']"
-                @click="filter.is_sale = !filter.is_sale">Sale</button>
+                @click="filter.is_sale = !filter.is_sale; loading = true">Sale</button>
             <button class=" py-2 px-1 border-b" :class="[filter.is_sale ? 'border-b-transparent' : ' border-b']"
-                @click="filter.is_sale = !filter.is_sale">Purchase</button>
+                @click="filter.is_sale = !filter.is_sale; loading = true">Purchase</button>
         </div>
         <FwbTable class="rounded-lg">
             <FwbTableHead>
@@ -34,7 +34,7 @@
                     Total
                 </FwbTableHeadCell>
             </FwbTableHead>
-            <FwbTableBody>
+            <FwbTableBody v-if="!loading">
                 <template v-for="product in products" :key="product.id">
                     <FwbTableRow class=" border-b border-gray-200 dark:border-gray-700 rounded-lg"
                         v-if="(product.category.transaction_type == 'for_sale' || product.category.transaction_type == 'for_both') && filter.is_sale">
@@ -108,6 +108,7 @@
                     </FwbTableCell>
                 </FwbTableRow>
             </FwbTableBody>
+
         </FwbTable>
     </div>
 </template>
@@ -118,6 +119,7 @@ import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { debounce } from 'lodash';
 import { router, usePage } from '@inertiajs/vue3';
 const loader = ref(null)
+const loading = ref(false)
 const page = usePage();
 const queryParams = Object.fromEntries(
     new URLSearchParams(page.url.split("?")[1])
@@ -142,6 +144,7 @@ watch(filter, debounce(filter => {
         preserveState: true,
         preserveUrl: true,
         onSuccess: (e) => {
+            loading.value = false
         }
     })
 }, 500))

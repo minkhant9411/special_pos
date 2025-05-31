@@ -47,6 +47,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('history/sales', [HistoryController::class, 'sale'])->name('sale.history');
     Route::get('history/purchases', [HistoryController::class, 'purchase'])->name('purchase.history');
     Route::get('history/product', [HistoryController::class, 'product'])->name('product.history');
+    Route::get('history/vinyl', [HistoryController::class, 'vinyl'])->name('vinyl.history');
+    Route::get('history/customer', [HistoryController::class, 'customer'])->name('customer.history');
     Route::resource('history', HistoryController::class);
 
     Route::resource('account', AccountController::class);

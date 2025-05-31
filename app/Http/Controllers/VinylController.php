@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\Vinyl;
 use App\Services\VoucherService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class VinylController extends Controller
@@ -13,9 +14,67 @@ class VinylController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $request->date ? $date = Carbon::parse($request->date) : $date = Carbon::today('Asia/Yangon');
+
+
+        $customers = Customer::where('is_deleted', false)
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->search . '%');
+            })
+            ->with([
+                'sales' => function ($query) use ($date) {
+                    $query->whereYear('created_at', $date->year)
+                        ->whereMonth('created_at', $date->month);
+                }
+            ], [
+                'sales.vinyls' => function ($query) use ($date) {
+                    $query->whereYear('vinyls.created_at', $date->year)
+                        ->whereMonth('vinyls.created_at', $date->month);
+                }
+            ])
+            ->get();
+        $customersData = $customers->map(function ($customer) {
+            // Sum of "paid" field from sales
+            $totalPaid = $customer->sales->sum('paid');
+
+            // Sum of (length * width) from all vinyls in all sales
+            $totalFeet = $customer->sales->flatMap(function ($sale) {
+                return $sale->vinyls;
+            })->sum(function ($vinyl) {
+                return $vinyl->length * $vinyl->width;
+            });
+
+            return [
+                'customer_id' => $customer->id,
+                'customer_name' => $customer->name,
+                'totalpaid' => $totalPaid,
+                'totalfeet' => $totalFeet
+            ];
+        });
+        $vinyls = Vinyl::where('is_deleted', false)
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('customers_id', '=', $request->search);
+            })
+            ->where(function ($query) use ($date) {
+                // dd($date->year, $date->month);
+                $query->whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month);
+            })
+            ->with('customer');
+        $vinyls = $vinyls
+            ->paginate(20)->withQueryString();
+
+
+        // dd($vinyls->toArray());
+        return Inertia('Vinyl/Index', [
+            'vinyls' => inertia()->merge(fn() => $vinyls->items()),
+            'vinylPagination' => $vinyls->toArray(),
+            'customers' => Customer::where('is_deleted', false)->get(),
+            'customersData' => $customersData,
+
+        ]);
     }
 
     /**

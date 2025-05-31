@@ -83,12 +83,11 @@ const cardsData = [
     { href: "supplier.index", name: "ရောင်းချသူ", role: 'admin' },
     { href: "customer.index", name: "ဝယ်ယူသူ", role: 'admin' },
     { href: "product.index", name: "ပစ္စည်း", role: 'admin' },
+    { href: "stuff.index", name: "အကောင့်အမည်", role: 'admin' },
     { href: "vinyl.create", name: "ဗွီနိုင်း အရောင်း", role: 'admin' },
     { href: "sale.index", name: "အရောင်း", role: 'casher' },
     { href: "purchase.index", name: "အဝယ်", role: 'admin' },
     { href: "history.index", name: "စာရင်း", role: 'admin' },
-    { href: "stuff.index", name: "အကောင့်အမည်", role: 'admin' },
-    { href: "account.index", name: "အကောင့်", role: 'admin' },
 ];
 </script>
 <style scoped></style>

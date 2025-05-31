@@ -1,6 +1,6 @@
 <template>
 
-    <NormalNav name="အကောင့်" url="home" />
+    <NormalNav name="အကောင့်" url="history.index" />
     <div class="m-2 my-20">
         <div class="grid grid-cols-2 gap-2">
             <Select v-model="filter.search" :data="Stuff" name="All Stuff" />

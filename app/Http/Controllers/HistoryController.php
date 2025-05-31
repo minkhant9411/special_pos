@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\History;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Sale;
+use App\Models\Vinyl;
 use App\SharedFunctionality;
 use Carbon\Carbon;
 use Date;
@@ -46,7 +48,7 @@ class HistoryController extends Controller
     public function product(Request $request)
     {
         $request->date ? $date = Carbon::parse($request->date) : $date = Carbon::today('Asia/Yangon');
-        $request->is_sale == null || $request->is_sale == true ? $is_sale = true : $is_sale = false;
+        $request->is_sale == null || $request->is_sale === 'true' ? $is_sale = true : $is_sale = false;
         // dd($is_sale);
         // dd($date);
         if ($is_sale) {
@@ -104,4 +106,27 @@ class HistoryController extends Controller
 
         ]);
     }
+    public function customer(Request $request)
+    {
+
+        $customer = Customer::where('is_deleted', false)
+            ->where('id', $request->id)
+            ->with('sales')
+            ->first();
+        $customer = $customer->sales->map(function ($sale) {
+            return [
+                'date' => $sale->created_at,
+                'voucher_id' => $sale->voucher_id,
+                'paid' => $sale->paid,
+                'total' => $sale->vinyls->sum(function ($vinyl) {
+                    return $vinyl->length * $vinyl->width * $vinyl->pivot->price * $vinyl->pivot->quantity;
+                })
+            ];
+
+
+        });
+        return $customer;
+
+    }
+
 }
