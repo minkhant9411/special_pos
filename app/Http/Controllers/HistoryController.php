@@ -46,7 +46,7 @@ class HistoryController extends Controller
     public function product(Request $request)
     {
         $request->date ? $date = Carbon::parse($request->date) : $date = Carbon::today('Asia/Yangon');
-        $request->is_sale == null || $request->is_sale == true ? $is_sale = true : $is_sale = false;
+        $request->is_sale == null || $request->is_sale === 'true' ? $is_sale = true : $is_sale = false;
         // dd($is_sale);
         // dd($date);
         if ($is_sale) {
