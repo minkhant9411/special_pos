@@ -74,7 +74,7 @@ class SaleController extends Controller
      */
     public function show($id)
     {
-        $sale = Sale::where('voucher_id', $id)->where('is_deleted', '=', false)->with(['products', 'customer', 'vinyls'])->first();
+        $sale = Sale::where('voucher_id', $id)->where('is_deleted', '=', false)->with(['products', 'customer', 'vinyls', 'boards'])->first();
         if (!$sale)
             return App::abort(404);
 
@@ -84,11 +84,16 @@ class SaleController extends Controller
             $grand_total = $sale->products->map(function ($product) {
                 return ['total' => $product->pivot->price * $product->pivot->quantity];
             })->sum('total');
-        } else {
+        } else if (($sale->vinyls->count() > 0)) {
             $grand_total = $sale->vinyls->map(function ($vinyl) {
                 return ['total' => $vinyl->length * $vinyl->width * $vinyl->pivot->price * $vinyl->pivot->quantity];
             })->sum('total');
+        } else if (($sale->boards->count() > 0)) {
+            $grand_total = $sale->boards->map(function ($board) {
+                return ['total' => $board->length * $board->width * $board->pivot->price * $board->pivot->quantity];
+            })->sum('total');
         }
+        // dd($sale->boards);
         $products = Product::where('is_deleted', '=', false)->get();
         return Inertia('Sale/Detail', ['sale' => $sale, 'grand_total' => $grand_total, 'products' => $products]);
     }

@@ -15,6 +15,7 @@ const cardsData = [
     { href: "purchase.history", name: "အဝယ်" },
     { href: "product.history", name: "ပစ္စည်း" },
     { href: "vinyl.index", name: "ဗွီနိုင်း" },
+    { href: "board.index", name: "ဆိုင်းဘုတ်" },
     { href: "account.index", name: "အကောင့်" },
     // { href: "purchase.index", name: "Purchase" },
     // { href: "sale.index", name: "Sale" },

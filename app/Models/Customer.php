@@ -27,6 +27,10 @@ class Customer extends Model
     {
         return $this->hasMany(Vinyl::class);
     }
+    public function boards()
+    {
+        return $this->hasMany(Board::class);
+    }
     public function sales()
     {
         return $this->hasMany(Sale::class);

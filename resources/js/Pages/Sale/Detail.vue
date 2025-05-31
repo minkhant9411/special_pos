@@ -60,6 +60,20 @@
                     </span>
                 </div>
             </template>
+            <template v-if="sale.boards.length > 0">
+                <div class="flex justify-between px-2 py-1" v-for="item in sale.boards" :key="item.id">
+                    <span> {{ item.width }} x {{ item.length }} x {{ item.pivot.quantity }} {{ item.unit }} </span>
+                    <span>MMK {{ item.length * item.width * item.pivot.price * item.pivot.quantity }} <svg v-if="edit"
+                            @click="() => {
+                                router.post(route('sale.update', { sale: sale, vinyl_id: item.id, delete_vinyl: true, _method: 'PUT' }))
+                            }" class="w-5 h-5 cursor-pointer text-gray-800 dark:text-red-500 inline" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                        </svg>
+                    </span>
+                </div>
+            </template>
 
             <hr class="h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">
             <div class="flex justify-between px-2 py-1">

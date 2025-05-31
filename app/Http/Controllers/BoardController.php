@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Board;
 use App\Models\Customer;
 use App\Models\Sale;
-use App\Models\Vinyl;
 use App\Services\VoucherService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class VinylController extends Controller
+class BoardController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,30 +23,39 @@ class VinylController extends Controller
             ->when($request->search, function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->search . '%');
             })
-            ->with([
-                'sales' => function ($query) use ($date) {
-                    $query
-                        ->where('voucher_id', 'like', 'V-%')
-                        ->whereYear('created_at', $date->year)
-                        ->whereMonth('created_at', $date->month);
-                }
-            ], [
-                'sales.vinyls' => function ($query) use ($date) {
-                    $query
-                        ->where('voucher_id', 'like', 'V-%')->whereYear('vinyls.created_at', $date->year)
-                        ->whereMonth('vinyls.created_at', $date->month);
-                }
-            ])
+            ->with(
+                [
+                    'sales' => function ($query) use ($date) {
+                        $query
+                            ->where('voucher_id', 'like', 'B-' . '%')
+                            ->whereYear('created_at', $date->year)
+                            ->whereMonth('created_at', $date->month);
+                    }
+                ],
+                [
+                    'sales.boards' => function ($query) use ($date) {
+                        $query
+                            ->where('voucher_id', 'like', 'B-' . '%')
+                            ->whereYear('boards.created_at', $date->year)
+                            ->whereMonth('boards.created_at', $date->month);
+                    }
+                ]
+            )
             ->get();
+        // dd($customers->map(function ($c) {
+        //     return $c->sales->map(function ($s) {
+        //         return $s->paid;
+        //     });
+        // })->toArray());
         $customersData = $customers->map(function ($customer) {
             // Sum of "paid" field from sales
             $totalPaid = $customer->sales->sum('paid');
 
-            // Sum of (length * width) from all vinyls in all sales
+            // Sum of (length * width) from all boards in all sales
             $totalFeet = $customer->sales->flatMap(function ($sale) {
-                return $sale->vinyls;
-            })->sum(function ($vinyl) {
-                return $vinyl->length * $vinyl->width;
+                return $sale->boards;
+            })->sum(function ($board) {
+                return $board->length * $board->width;
             });
 
             return [
@@ -56,7 +65,8 @@ class VinylController extends Controller
                 'totalfeet' => $totalFeet
             ];
         });
-        $vinyls = Vinyl::where('is_deleted', false)
+        // dd($customersData->toArray());
+        $boards = Board::where('is_deleted', false)
             ->when($request->search, function ($query) use ($request) {
                 $query->where('customers_id', '=', $request->search);
             })
@@ -66,14 +76,14 @@ class VinylController extends Controller
                     ->whereMonth('created_at', $date->month);
             })
             ->with('customer');
-        $vinyls = $vinyls
+        $boards = $boards
             ->paginate(20)->withQueryString();
 
 
-        // dd($vinyls->toArray());
-        return Inertia('Vinyl/Index', [
-            'vinyls' => inertia()->merge(fn() => $vinyls->items()),
-            'vinylPagination' => $vinyls->toArray(),
+        // dd($boards->toArray());
+        return Inertia('Board/Index', [
+            'boards' => inertia()->merge(fn() => $boards->items()),
+            'boardPagination' => $boards->toArray(),
             'customers' => Customer::where('is_deleted', false)->get(),
             'customersData' => $customersData,
 
@@ -87,9 +97,9 @@ class VinylController extends Controller
     {
 
         $customers = Customer::where('is_deleted', false)->get();
-        return inertia('Vinyl/Create', [
+        return inertia('Board/Create', [
             'customers' => $customers,
-            'voucher_id' => 'V-' . VoucherService::generate()
+            'voucher_id' => 'B-' . VoucherService::generate()
         ]);
     }
 
@@ -118,31 +128,31 @@ class VinylController extends Controller
         ]);
         $pivotData = [];
         foreach ($request->allItems as $product) {
-            $vinyl = Vinyl::where('width', $product['width'])
+            $board = Board::where('width', $product['width'])
                 ->where('length', $product['length'])
                 ->first();
-            if ($vinyl) {
-                $pivotData[$vinyl->id] = ['quantity' => $product['quantity'], 'price' => $product['price']];
+            if ($board) {
+                $pivotData[$board->id] = ['quantity' => $product['quantity'], 'price' => $product['price']];
             } else {
-                $vinyl = Vinyl::create([
+                $board = Board::create([
                     'width' => $product['width'],
                     'length' => $product['length'],
                     'price' => $product['price'],
                     'created_by' => auth()->user()->id,
                 ]);
-                $pivotData[$vinyl->id] = ['quantity' => $product['quantity'], 'price' => $product['price']];
+                $pivotData[$board->id] = ['quantity' => $product['quantity'], 'price' => $product['price']];
             }
         }
 
-        $sale->vinyls()->attach($pivotData);
-        // dd($vinyl);
-        return redirect()->route('sale.show', $sale->voucher_id)->with('message', 'Vinyl Sale created successfully.');
+        $sale->boards()->attach($pivotData);
+        // dd($board);
+        return redirect()->route('sale.show', $sale->voucher_id)->with('message', 'Board Sale created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Vinyl $vinyl)
+    public function show(Board $board)
     {
         //
     }
@@ -150,7 +160,7 @@ class VinylController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Vinyl $vinyl)
+    public function edit(Board $board)
     {
         //
     }
@@ -158,7 +168,7 @@ class VinylController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Vinyl $vinyl)
+    public function update(Request $request, Board $board)
     {
         //
     }
@@ -166,7 +176,7 @@ class VinylController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Vinyl $vinyl)
+    public function destroy(Board $board)
     {
         //
     }

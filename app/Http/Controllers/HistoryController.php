@@ -111,20 +111,40 @@ class HistoryController extends Controller
 
         $customer = Customer::where('is_deleted', false)
             ->where('id', $request->id)
+
             ->with('sales')
             ->first();
-        $customer = $customer->sales->map(function ($sale) {
-            return [
-                'date' => $sale->created_at,
-                'voucher_id' => $sale->voucher_id,
-                'paid' => $sale->paid,
-                'total' => $sale->vinyls->sum(function ($vinyl) {
-                    return $vinyl->length * $vinyl->width * $vinyl->pivot->price * $vinyl->pivot->quantity;
-                })
-            ];
+        if (!$request->isBoard) {
+            $customer = $customer->sales->map(function ($sale) {
+                return [
+                    'date' => $sale->created_at,
+                    'voucher_id' => $sale->voucher_id,
+                    'paid' => $sale->paid,
+                    'total' => $sale->vinyls->sum(function ($vinyl) {
+                        return $vinyl->length * $vinyl->width * $vinyl->pivot->price * $vinyl->pivot->quantity;
+                    })
+                ];
+            });
+            $customer = $customer->filter(function ($c) {
+                return str_starts_with($c['voucher_id'], 'V-') && $c['paid'] != $c['total'];
+            });
+        } else {
+            $customer = $customer->sales->map(function ($sale) {
+                return [
+                    'date' => $sale->created_at,
+                    'voucher_id' => $sale->voucher_id,
+                    'paid' => $sale->paid,
+                    'total' => $sale->boards->sum(function ($board) {
+                        return $board->length * $board->width * $board->pivot->price * $board->pivot->quantity;
+                    })
+                ];
+            });
 
+            $customer = $customer->filter(function ($c) {
+                return str_starts_with($c['voucher_id'], 'B-') && $c['paid'] != $c['total'];
+            });
+        }
 
-        });
         return $customer;
 
     }

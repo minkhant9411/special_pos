@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HistoryController;
@@ -58,6 +59,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/stuff/delete/{id}', [StuffController::class, 'destroy'])->name('stuff.destroy');
 
     Route::resource('vinyl', VinylController::class);
+    Route::resource('board', BoardController::class);
 
 });
 Route::middleware('guest')->group(function () {

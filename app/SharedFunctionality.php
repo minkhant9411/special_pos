@@ -75,12 +75,12 @@ trait SharedFunctionality
         )->where('is_deleted', false)->whereDate('date', Carbon::parse($date))
             ->sum('paid');
 
-        $sales = Sale::where('is_deleted', false)->with(['products', 'customer', 'vinyls'])
+        $sales = Sale::where('is_deleted', false)->with(['products', 'customer', 'vinyls', 'boards'])
             ->when($request->search, function ($query, $search) {
                 $query->where('voucher_id', 'like', '%' . $search . '%');
             }, function ($query) use ($date) {
                 $query->whereDate('date', Carbon::parse($date));
-            })->latest()->latest()->get();
+            })->latest()->get();
 
         //purchase
         $totalPurchaseAmount = Purchase::when(

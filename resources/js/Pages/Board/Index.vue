@@ -1,6 +1,6 @@
 <template>
 
-    <NormalNav name="Vinyl" url="history.index" />
+    <NormalNav name="Board" url="history.index" />
     <div class="m-2 my-20">
         <div class="grid grid-cols-2 gap-2">
             <!-- <Select v-model="filter.search" :data="customers" name="All Customers" /> -->
@@ -53,7 +53,7 @@
                 <FwbTableRow class="border-b border-gray-200 dark:border-gray-700 rounded-lg dark:hover:bg-gray-600">
                     <FwbTableCell colspan="4">
                         <div ref="loader">
-                            <div v-if="vinylPagination.next_page_url" role="status"
+                            <div v-if="boardPagination.next_page_url" role="status"
                                 class="p-4 border border-gray-200  rounded-sm shadow-sm animate-pulse md:p-6 dark:border-gray-700">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center justify-between">
@@ -90,8 +90,8 @@
     </div>
     <div
         class=" dark:bg-gray-800 bg-white border border-t dark:border-gray-700 border-gray-200  p-6 rounded-t-lg flex justify-between fixed bottom-0 left-0 right-0 items-center">
-        <Link :href="route('vinyl.create')">
-        <fwb-button color="default">Create Vinyl</fwb-button>
+        <Link :href="route('board.create')">
+        <fwb-button color="default">Create Board</fwb-button>
         </Link>
     </div>
 
@@ -175,8 +175,8 @@ const filter = reactive({
 })
 const prop = defineProps({
     customers: Object,
-    vinyls: Object,
-    vinylPagination: Object,
+    boards: Object,
+    boardPagination: Object,
     customersData: Object
 })
 watch(filter, debounce(filter => {
@@ -197,12 +197,12 @@ const checkVisibility = () => {
 };
 
 const loadMore = () => {
-    if (!prop.vinylPagination.next_page_url) return
-    router.get(prop.vinylPagination.next_page_url, {}, {
+    if (!prop.boardPagination.next_page_url) return
+    router.get(prop.boardPagination.next_page_url, {}, {
         preserveState: true,
         preserveScroll: true,
         preserveUrl: true,
-        only: ['vinyls', 'vinylPagination', 'grand_total']
+        only: ['boards', 'boardPagination', 'grand_total']
     });
 };
 
@@ -218,7 +218,7 @@ onUnmounted(() => {
 
 const showModal = (data) => {
     modalShow.value = !modalShow.value;
-    axios.get(route('customer.history', { id: data.customer_id })).then(res => modalData.value = res.data);
+    axios.get(route('customer.history', { id: data.customer_id, isBoard: 1 })).then(res => modalData.value = res.data);
 }
 </script>
 
