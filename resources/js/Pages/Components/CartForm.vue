@@ -15,7 +15,7 @@
             <div v-for="item in cart" :key="item.id"
                 class="grid grid-cols-3 gap-2ß px-2 py-2 border-b-1 border-b-gray-500 dark:border-b-gray-700">
                 <span class="py-2 mx-auto">
-                    <img :src="[item.image_path != null ? '/storage/' + item.image_path : '/storage/profiles/default.jpg']"
+                    <img :src="[item.image_path != null ? '/storage/' + item.image_path : '/default.jpg']"
                         class="w-15 h-15 object-contain mx-auto rounded-xl" alt="">
                 </span>
                 <div class="py-2">
@@ -49,7 +49,8 @@
                         @blur="(e) => { item.price = e.target.innerText; cartChange() }">
                         {{ item.price }}
                     </span>
-                    X {{ item.qty }}
+                    X <span contenteditable @blur="(e) => { item.qty = e.target.innerText; cartChange() }">{{ item.qty
+                        }}</span>
                 </div>
                 <!-- <spn class="py-2 self-center">
                     <svg @click="deleteItem(item.id)" class="w-5 h-5 mx-auto text-red-400" aria-hidden="true"

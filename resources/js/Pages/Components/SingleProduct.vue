@@ -5,8 +5,7 @@
             <div class="flex">
                 <img v-if="product.image_path" :src="'storage/' + product.image_path"
                     class="h-20 w-20 rounded-xl object-cover me-4" alt="" />
-                <img v-else src="/public/storage/profiles/default.jpg" class="h-20 w-20 rounded-xl object-cover me-4"
-                    alt="" />
+                <img v-else :src="'/default.jpg'" class="h-20 w-20 rounded-xl object-cover me-4" alt="" />
 
                 <div class="my-auto">
                     <p class="text-sm">{{ product.name }}</p>

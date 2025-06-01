@@ -4,7 +4,7 @@
             class="w-full relative border rounded-lg dark:border-gray-800 border-gray-300 shadow-sm dark:shadow-gray-900 shadow-gray-100">
             <a href="#">
                 <img class="rounded-lg mx-auto w-[100%] object-cover h-40"
-                    :src="[data.image_path != null ? '/storage/' + data.image_path : '/storage/profiles/default.jpg']"
+                    :src="[data.image_path != null ? '/storage/' + data.image_path : '/default.jpg']"
                     alt="data image" />
             </a>
             <button @click="() => { emit('add-cart', [data, 1]) }"

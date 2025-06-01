@@ -23,7 +23,7 @@
             </div>
             <div class="px-2 py-1">
                 <p class="text-red-500 underline cursor-pointer" @click="() => {
-                    router.post(route('purchase.destroy', { purchase, _method: 'PUT' }))
+                    router.post(route('purchase.destroy', { id: purchase.id }))
                 }">
                     Delete Voucher
                 </p>

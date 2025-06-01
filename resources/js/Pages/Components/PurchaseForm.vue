@@ -1,7 +1,7 @@
 <template>
     <form class="mt-20 px-3">
         <div class="my-7 text-center">
-            <img src="/public/storage/profiles/default.jpg" alt="" class="h-40 w-40 object-cover mx-auto rounded-xl" />
+            <img :src="'/default.jpg'" alt="" class="h-40 w-40 object-cover mx-auto rounded-xl" />
         </div>
         <div class="my-7">
             <input
