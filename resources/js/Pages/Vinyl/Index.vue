@@ -97,7 +97,7 @@
 
     <div class="relative top-0 left-0 w-[100vw] h-[100vh] modal" @click.self="modalShow = !modalShow" v-if="modalShow">
         <div
-            class="absolute w-100 h-[100vh] overflow-y-auto  bg-gray-800 top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 rounded">
+            class="absolute w-100 h-[100vh] overflow-y-auto  bg-gray-950 top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 rounded">
             <div class=" sticky top-0 left-0 right-0 bg-gray-900 flex justify-between p-3">
                 <h1 class="font-bold self-center p">Debt Left</h1>
                 <IconWrapper class="w-11 h-11" @click="modalShow = !modalShow">
