@@ -46,7 +46,7 @@ class VinylController extends Controller
             $totalFeet = $customer->sales->flatMap(function ($sale) {
                 return $sale->vinyls;
             })->sum(function ($vinyl) {
-                return $vinyl->length * $vinyl->width;
+                return $vinyl->length * $vinyl->width * $vinyl->pivot->quantity;
             });
 
             return [
