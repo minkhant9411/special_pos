@@ -82,7 +82,7 @@ class AccountController extends Controller
             'stuff_id' => $validate['stuff_id'],
             'created_by' => auth()->user()->id,
         ]);
-        return redirect()->route('account.index')->with('message', 'Account created successfully.');
+        return redirect()->route('account.index', ['is_income' => $account->type == 'I' ? 'true' : 'false'])->with('message', 'Account created successfully.');
     }
 
     /**

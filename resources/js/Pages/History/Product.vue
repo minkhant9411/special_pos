@@ -163,13 +163,17 @@ const loadMore = () => {
         preserveState: true,
         preserveScroll: true,
         preserveUrl: true,
-        only: ['products', 'productPagination', 'grand_total']
+        only: ['products', 'productPagination', 'grand_total'],
+        onSuccess: () => {
+            loading.value = false
+        }
     });
 };
 
 onMounted(() => {
     window.addEventListener('scroll', checkVisibility);
-    checkVisibility(); // Trigger immediately
+    // checkVisibility(); // Trigger immediately
+    loadMore();
 });
 
 onUnmounted(() => {

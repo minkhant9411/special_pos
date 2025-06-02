@@ -18,10 +18,12 @@
 
         </div>
         <div class="my-2 grid grid-cols-2 text-center gap-2">
-            <button class=" py-2 px-1 border-b" :class="[filter.is_income ? 'border-b' : 'border-b-transparent']"
-                @click="filter.is_income = !filter.is_income">အဝင်</button>
-            <button class=" py-2 px-1 border-b" :class="[filter.is_income ? 'border-b-transparent' : ' border-b']"
-                @click="filter.is_income = !filter.is_income">အထွက်
+            <button class=" py-2 px-1 border-b"
+                :class="[filter.is_income == 'true' ? 'border-b' : 'border-b-transparent']"
+                @click="filter.is_income = 'true'">အဝင်</button>
+            <button class=" py-2 px-1 border-b"
+                :class="[filter.is_income == 'true' ? 'border-b-transparent' : ' border-b']"
+                @click="filter.is_income = 'false'">အထွက်
             </button>
         </div>
         <FwbTable hoverable class="rounded-lg cursor-pointer">
@@ -141,7 +143,7 @@ const showActionId = ref(null);
 const filter = reactive({
     search: queryParams.search || null,
     date: queryParams.date || new Date().toISOString().slice(0, 7),
-    is_income: queryParams.is_income || true,
+    is_income: queryParams.is_income || 'true',
 
 })
 const prop = defineProps({
@@ -159,7 +161,7 @@ watch(filter, debounce(filter => {
     // }
     router.get('', { search: filter.search, date: filter.date, is_income: filter.is_income }, {
         preserveState: true,
-        preserveUrl: true,
+        // preserveUrl: true,
         onSuccess: (e) => {
         }
     })
