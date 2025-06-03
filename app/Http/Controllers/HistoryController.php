@@ -19,8 +19,8 @@ class HistoryController extends Controller
 
     public function index()
     {
-        $sales = Sale::where('is_deleted', false)->get();
-        $purchases = Purchase::where('is_deleted', false)->get();
+        $sales = Sale::get();
+        $purchases = Purchase::get();
         return Inertia('History/Index', [
             'sales' => $sales,
             'purchases' => $purchases
@@ -50,28 +50,36 @@ class HistoryController extends Controller
         // dd($is_sale);
         // dd($date);
         if ($is_sale) {
-            $products = Product::where('is_deleted', false)
-                ->when($request->search, function ($query, $search) {
-                    $query->where('name', 'like', '%' . $search . '%');
-                })
+            $products = Product::when($request->search, function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
                 ->with([
                     'sales' => function ($q) use ($date) {
-                        $q->whereDate('date', $date);
+                        $q->whereDate('date', $date)
+                        ;
                     }
                 ])
-                ->with('category')
+                ->with([
+                    'category' => function ($q) {
+                        $q;
+                    }
+                ])
                 ->paginate(20)->withQueryString();
         } else {
-            $products = Product::where('is_deleted', false)
-                ->when($request->search, function ($query, $search) {
-                    $query->where('name', 'like', '%' . $search . '%');
-                })
+            $products = Product::when($request->search, function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
                 ->with([
                     'purchases' => function ($q) use ($date) {
-                        $q->whereDate('date', $date);
+                        $q->whereDate('date', $date)
+                        ;
                     }
                 ])
-                ->with('category')
+                ->with([
+                    'category' => function ($q) {
+                        $q;
+                    }
+                ])
                 ->paginate(20)->withQueryString();
         }
         $grand_total = $products->map(function ($product) {
@@ -104,4 +112,53 @@ class HistoryController extends Controller
 
         ]);
     }
+<<<<<<< HEAD
+=======
+    public function customer(Request $request)
+    {
+
+        $customer = Customer::where('id', $request->id)
+            ->with([
+                'sales' => function ($query) {
+                    $query;
+
+                }
+            ])
+            ->first();
+        if (!$request->isBoard) {
+            $customer = $customer->sales->map(function ($sale) {
+                return [
+                    'date' => $sale->created_at,
+                    'voucher_id' => $sale->voucher_id,
+                    'paid' => $sale->paid,
+                    'total' => $sale->vinyls->sum(function ($vinyl) {
+                        return $vinyl->length * $vinyl->width * $vinyl->pivot->price * $vinyl->pivot->quantity;
+                    })
+                ];
+            });
+            $customer = $customer->filter(function ($c) {
+                return str_starts_with($c['voucher_id'], 'V-') && $c['paid'] != $c['total'];
+            });
+        } else {
+            $customer = $customer->sales->map(function ($sale) {
+                return [
+                    'date' => $sale->created_at,
+                    'voucher_id' => $sale->voucher_id,
+                    'paid' => $sale->paid,
+                    'total' => $sale->boards->sum(function ($board) {
+                        return $board->length * $board->width * $board->pivot->price * $board->pivot->quantity;
+                    })
+                ];
+            });
+
+            $customer = $customer->filter(function ($c) {
+                return str_starts_with($c['voucher_id'], 'B-') && $c['paid'] != $c['total'];
+            });
+        }
+
+        return $customer;
+
+    }
+
+>>>>>>> 7f9bd50 (add notDeletedScope)
 }

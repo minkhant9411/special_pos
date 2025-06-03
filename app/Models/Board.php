@@ -5,19 +5,15 @@ namespace App\Models;
 
 use App\Models\Scopes\NotDeletedScope;
 use Illuminate\Database\Eloquent\Model;
-class Sale extends Model
+class Board extends Model
 {
     protected static function booted()
     {
         static::addGlobalScope(new NotDeletedScope);
     }
-
     protected $fillable = [
-        'voucher_id',
-        'date',
-        'description',
-        'paid',
-        'customer_id',
+        'width',
+        'length',
         'created_by',
         'updated_by',
         'is_deleted',
@@ -26,8 +22,8 @@ class Sale extends Model
     {
         return $this->belongsTo(Customer::class);
     }
-    public function products()
+    public function sales()
     {
-        return $this->belongsToMany(Product::class)->withPivot(['price', 'quantity', 'id']);
+        return $this->belongsToMany(Sale::class, 'board_sale')->withPivot(['price', 'quantity', 'id']);
     }
 }

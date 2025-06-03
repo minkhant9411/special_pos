@@ -17,11 +17,10 @@ trait SharedFunctionality
         $search = request()->search;
         $category = request()->category;
 
-        $categories = Category::where('is_deleted', false)
-            ->whereIn('transaction_type', [$for, 'for_both'])->latest()
+        $categories = Category::whereIn('transaction_type', [$for, 'for_both'])->latest()
             ->get();
 
-        $products = Product::where('is_deleted', false)->latest()
+        $products = Product::latest()
             ->whereHas('category', function ($query) use ($for) {
                 $query->whereIn('transaction_type', [$for, 'for_both']);
             })
@@ -72,10 +71,14 @@ trait SharedFunctionality
             function ($query, $search) {
                 $query->where('voucher_id', $search);
             }
-        )->where('is_deleted', false)->whereDate('date', Carbon::parse($date))
+        )->whereDate('date', Carbon::parse($date))
             ->sum('paid');
 
+<<<<<<< HEAD
         $sales = Sale::where('is_deleted', false)->with(['products', 'customer'])
+=======
+        $sales = Sale::with(['products', 'customer', 'vinyls', 'boards'])
+>>>>>>> 7f9bd50 (add notDeletedScope)
             ->when($request->search, function ($query, $search) {
                 $query->where('voucher_id', $search);
             }, function ($query) use ($date) {
@@ -88,9 +91,9 @@ trait SharedFunctionality
             function ($query, $search) {
                 $query->where('voucher_id', $search);
             }
-        )->where('is_deleted', false)->whereDate('date', Carbon::parse($date))->latest()->sum('paid');
+        )->whereDate('date', Carbon::parse($date))->latest()->sum('paid');
 
-        $purchases = Purchase::where('is_deleted', false)->with(['products', 'supplier'])
+        $purchases = Purchase::with(['products', 'supplier'])
             ->when($request->search, function ($query, $search) {
                 $query->where('voucher_id', $search);
             }, function ($query) use ($date) {

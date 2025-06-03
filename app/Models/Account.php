@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\NotDeletedScope;
 use Illuminate\Database\Eloquent\Model;
-
 class Account extends Model
 {
+    protected static function booted()
+    {
+        static::addGlobalScope(new NotDeletedScope);
+    }
+
     protected $fillable = [
         'description',
         'type',

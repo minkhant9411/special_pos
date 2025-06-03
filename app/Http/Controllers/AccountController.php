@@ -18,16 +18,15 @@ class AccountController extends Controller
         $request->date ? $date = Carbon::parse($request->date) : $date = Carbon::today('Asia/Yangon');
 
 
-        $stuff = Stuff::where('is_deleted', false)->get();
+        $stuff = Stuff::get();
         $type = "I";
 
         if ($request->is_income) {
             $request->is_income == 'true' ? $type = "I" : $type = 'E';
         }
-        $accounts = Account::where('is_deleted', false)
-            ->where(function ($query) use ($type) {
-                $query->where('type', $type);
-            })
+        $accounts = Account::where(function ($query) use ($type) {
+            $query->where('type', $type);
+        })
             ->when($request->search, function ($query) use ($request) {
                 $query->where('stuff_id', '=', $request->search);
             })
@@ -57,7 +56,7 @@ class AccountController extends Controller
      */
     public function create()
     {
-        $stuff = Stuff::where('is_deleted', false)->get();
+        $stuff = Stuff::get();
         return Inertia('Account/Create', [
             'stuff' => $stuff,
         ]);
