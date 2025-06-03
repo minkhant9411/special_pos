@@ -19,20 +19,22 @@ class VinylController extends Controller
         $request->date ? $date = Carbon::parse($request->date) : $date = Carbon::today('Asia/Yangon');
 
 
-        $customers = Customer::where('is_deleted', false)
-            ->when($request->search, function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->search . '%');
-            })
+        $customers = Customer::when($request->search, function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        })
             ->with([
                 'sales' => function ($query) use ($date) {
                     $query
                         ->where('voucher_id', 'like', 'V-%')
+
                         ->whereYear('created_at', $date->year)
                         ->whereMonth('created_at', $date->month);
                 }
             ], [
                 'sales.vinyls' => function ($query) use ($date) {
                     $query
+
+
                         ->where('voucher_id', 'like', 'V-%')->whereYear('vinyls.created_at', $date->year)
                         ->whereMonth('vinyls.created_at', $date->month);
                 }
@@ -56,10 +58,9 @@ class VinylController extends Controller
                 'totalfeet' => $totalFeet
             ];
         });
-        $vinyls = Vinyl::where('is_deleted', false)
-            ->when($request->search, function ($query) use ($request) {
-                $query->where('customers_id', '=', $request->search);
-            })
+        $vinyls = Vinyl::when($request->search, function ($query) use ($request) {
+            $query->where('customers_id', '=', $request->search);
+        })
             ->where(function ($query) use ($date) {
                 // dd($date->year, $date->month);
                 $query->whereYear('created_at', $date->year)
@@ -74,7 +75,7 @@ class VinylController extends Controller
         return Inertia('Vinyl/Index', [
             'vinyls' => inertia()->merge(fn() => $vinyls->items()),
             'vinylPagination' => $vinyls->toArray(),
-            'customers' => Customer::where('is_deleted', false)->get(),
+            'customers' => Customer::get(),
             'customersData' => $customersData,
 
         ]);
@@ -86,7 +87,7 @@ class VinylController extends Controller
     public function create()
     {
 
-        $customers = Customer::where('is_deleted', false)->get();
+        $customers = Customer::get();
         return inertia('Vinyl/Create', [
             'customers' => $customers,
             'voucher_id' => 'V-' . VoucherService::generate()
@@ -119,6 +120,7 @@ class VinylController extends Controller
         $pivotData = [];
         foreach ($request->allItems as $product) {
             $vinyl = Vinyl::where('width', $product['width'])
+
                 ->where('length', $product['length'])
                 ->first();
             if ($vinyl) {

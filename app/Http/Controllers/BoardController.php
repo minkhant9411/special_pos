@@ -19,10 +19,9 @@ class BoardController extends Controller
         $request->date ? $date = Carbon::parse($request->date) : $date = Carbon::today('Asia/Yangon');
 
 
-        $customers = Customer::where('is_deleted', false)
-            ->when($request->search, function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->search . '%');
-            })
+        $customers = Customer::when($request->search, function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        })
             ->with(
                 [
                     'sales' => function ($query) use ($date) {
@@ -66,10 +65,9 @@ class BoardController extends Controller
             ];
         });
         // dd($customersData->toArray());
-        $boards = Board::where('is_deleted', false)
-            ->when($request->search, function ($query) use ($request) {
-                $query->where('customers_id', '=', $request->search);
-            })
+        $boards = Board::when($request->search, function ($query) use ($request) {
+            $query->where('customers_id', '=', $request->search);
+        })
             ->where(function ($query) use ($date) {
                 // dd($date->year, $date->month);
                 $query->whereYear('created_at', $date->year)
@@ -84,7 +82,7 @@ class BoardController extends Controller
         return Inertia('Board/Index', [
             'boards' => inertia()->merge(fn() => $boards->items()),
             'boardPagination' => $boards->toArray(),
-            'customers' => Customer::where('is_deleted', false)->get(),
+            'customers' => Customer::get(),
             'customersData' => $customersData,
 
         ]);
@@ -96,7 +94,7 @@ class BoardController extends Controller
     public function create()
     {
 
-        $customers = Customer::where('is_deleted', false)->get();
+        $customers = Customer::get();
         return inertia('Board/Create', [
             'customers' => $customers,
             'voucher_id' => 'B-' . VoucherService::generate()

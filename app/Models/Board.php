@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Scopes\NotDeletedScope;
+use Illuminate\Database\Eloquent\Model;
 class Board extends Model
 {
+    protected static function booted()
+    {
+        static::addGlobalScope(new NotDeletedScope);
+    }
     protected $fillable = [
         'width',
         'length',

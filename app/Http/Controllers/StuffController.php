@@ -12,10 +12,9 @@ class StuffController extends Controller
      */
     public function index()
     {
-        $stuff = Stuff::where('is_deleted', false)
-            ->when(request()->search, function ($query) {
-                $query->where('name', 'like', '%' . request()->search . '%');
-            })->get();
+        $stuff = Stuff::when(request()->search, function ($query) {
+            $query->where('name', 'like', '%' . request()->search . '%');
+        })->get();
         return inertia('Stuff/Index', [
             'all_stuff' => $stuff,
         ]);

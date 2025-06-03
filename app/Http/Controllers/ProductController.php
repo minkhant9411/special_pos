@@ -16,11 +16,10 @@ class ProductController extends Controller
     public function index(Request $request)
     {
 
-        $categories = Category::where('is_deleted', false)->get();
-        $products = Product::where('is_deleted', false)
-            ->when($request->search, function ($query, $search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            })
+        $categories = Category::get();
+        $products = Product::when($request->search, function ($query, $search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        })
             ->when($request->category, function ($query, $category) {
                 $query->whereHas('category', function ($catQuery) use ($category) {
                     $catQuery->where('name', $category);

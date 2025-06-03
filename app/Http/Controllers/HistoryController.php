@@ -21,8 +21,8 @@ class HistoryController extends Controller
 
     public function index()
     {
-        $sales = Sale::where('is_deleted', false)->get();
-        $purchases = Purchase::where('is_deleted', false)->get();
+        $sales = Sale::get();
+        $purchases = Purchase::get();
         return Inertia('History/Index', [
             'sales' => $sales,
             'purchases' => $purchases
@@ -52,28 +52,36 @@ class HistoryController extends Controller
         // dd($is_sale);
         // dd($date);
         if ($is_sale) {
-            $products = Product::where('is_deleted', false)
-                ->when($request->search, function ($query, $search) {
-                    $query->where('name', 'like', '%' . $search . '%');
-                })
+            $products = Product::when($request->search, function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
                 ->with([
                     'sales' => function ($q) use ($date) {
-                        $q->whereDate('date', $date);
+                        $q->whereDate('date', $date)
+                        ;
                     }
                 ])
-                ->with('category')
+                ->with([
+                    'category' => function ($q) {
+                        $q;
+                    }
+                ])
                 ->paginate(20)->withQueryString();
         } else {
-            $products = Product::where('is_deleted', false)
-                ->when($request->search, function ($query, $search) {
-                    $query->where('name', 'like', '%' . $search . '%');
-                })
+            $products = Product::when($request->search, function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
                 ->with([
                     'purchases' => function ($q) use ($date) {
-                        $q->whereDate('date', $date);
+                        $q->whereDate('date', $date)
+                        ;
                     }
                 ])
-                ->with('category')
+                ->with([
+                    'category' => function ($q) {
+                        $q;
+                    }
+                ])
                 ->paginate(20)->withQueryString();
         }
         $grand_total = $products->map(function ($product) {
@@ -109,10 +117,13 @@ class HistoryController extends Controller
     public function customer(Request $request)
     {
 
-        $customer = Customer::where('is_deleted', false)
-            ->where('id', $request->id)
+        $customer = Customer::where('id', $request->id)
+            ->with([
+                'sales' => function ($query) {
+                    $query;
 
-            ->with('sales')
+                }
+            ])
             ->first();
         if (!$request->isBoard) {
             $customer = $customer->sales->map(function ($sale) {

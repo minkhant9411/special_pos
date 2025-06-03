@@ -12,10 +12,9 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::where('is_deleted', false)
-            ->when(request()->search, function ($query) {
-                $query->where('name', 'like', '%' . request()->search . '%');
-            })->get();
+        $customers = Customer::when(request()->search, function ($query) {
+            $query->where('name', 'like', '%' . request()->search . '%');
+        })->get();
         return inertia('Customer/Index', [
             'customers' => $customers,
         ]);

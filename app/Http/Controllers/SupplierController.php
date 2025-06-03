@@ -12,10 +12,9 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::where('is_deleted', false)
-            ->when(request()->search, function ($query) {
-                $query->where('name', 'like', '%' . request()->search . '%');
-            })->get();
+        $suppliers = Supplier::when(request()->search, function ($query) {
+            $query->where('name', 'like', '%' . request()->search . '%');
+        })->get();
         return inertia('Supplier/Index', [
             'suppliers' => $suppliers,
         ]);

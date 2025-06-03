@@ -12,10 +12,9 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::where('is_deleted', false)
-            ->when($request->search, function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->search . '%');
-            })->get();
+        $categories = Category::when($request->search, function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        })->get();
         return inertia('Category/Index', [
             'categories' => $categories,
         ]);
