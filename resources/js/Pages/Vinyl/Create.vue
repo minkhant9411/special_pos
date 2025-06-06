@@ -29,10 +29,10 @@
                     placeholder="Length" />
                 <Input vinyl label="Width" @input="getTotal()" v-model="singleItem.width" type="number"
                     placeholder="Width" />
-                <Input vinyl label="Price" @input="getTotal()" v-model="singleItem.price" type="number"
-                    placeholder="Price" />
                 <Input vinyl label="Quantity" @input="getTotal()" v-model="singleItem.quantity" type="number"
                     placeholder="Quantity" />
+                <Input vinyl label="Price" @input="getTotal()" v-model="singleItem.price" type="number"
+                    placeholder="Price" />
             </div>
         </div>
 
@@ -84,7 +84,7 @@
                     <div class="py-2 mx-auto self-center text-sm">MMK
                         <span class="py-1" contenteditable
                             @blur="(e) => { item.price = e.target.innerText; cartChange() }">
-                            {{ item.price }}
+                            {{ item.price * item.width * item.length }}
                         </span>
                         X {{ item.quantity }}
                     </div>
@@ -163,6 +163,12 @@ const singleItem = reactive({
 });
 
 const AddItem = () => {
+    // if (!confirm(`
+    // size:${singleItem.length}*${singleItem.width},
+    // price:${singleItem.price},
+    // quantity:${singleItem.quantity}`)) {
+    //     return
+    // };
     singleItem.id = allItems.value.length <= 0 ? singleItem.id++ : allItems.value[allItems.value.length - 1].id + 1
     allItems.value.push({ ...singleItem })
     localStorage.setItem('vinyl-cart', JSON.stringify(allItems.value))
@@ -201,6 +207,7 @@ const cartChange = () => {
 }
 
 const Submit = () => {
+    // confirm(`are you sure`);
     form.allItems = allItems.value;
     form.post(route('vinyl.store'), {
         onSuccess: () => {

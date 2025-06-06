@@ -29,10 +29,10 @@
                     placeholder="Length" />
                 <Input vinyl label="Width" @input="getTotal()" v-model="singleItem.width" type="number"
                     placeholder="Width" />
-                <Input vinyl label="Price" @input="getTotal()" v-model="singleItem.price" type="number"
-                    placeholder="Price" />
                 <Input vinyl label="Quantity" @input="getTotal()" v-model="singleItem.quantity" type="number"
                     placeholder="Quantity" />
+                <Input vinyl label="Price" @input="getTotal()" v-model="singleItem.price" type="number"
+                    placeholder="Price" />
             </div>
         </div>
 
@@ -54,7 +54,7 @@
                 <Select v-model="form.customer_id" :data="customers" name="Customer" />
                 <small class="text-red-500" v-if="$page.props.errors">{{ $page.props.errors.date }}</small>
                 <small class="text-red-500" v-if="$page.props.errors">{{ $page.props.errors.customer_id
-                }}</small>
+                    }}</small>
             </div>
             <div class="overflow-scroll">
                 <div v-for="item in allItems" :key="item.id"
@@ -116,7 +116,7 @@
                             <label for="paid">Paid</label>
                             <Input type="number" v-model="form.paid" placeholder="Paid Amount" />
                             <small class=" text-red-500 " v-if="$page.props.errors.paid">{{ $page.props.errors.paid
-                            }}</small>
+                                }}</small>
                         </div>
                     </div>
                     <div>
